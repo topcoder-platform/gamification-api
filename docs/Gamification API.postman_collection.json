@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "9a121662-eff8-4a57-b7e2-400e24833815",
+		"name": "Gamification API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10740"
+	},
+	"item": [
+		{
+			"name": "Badges",
+			"item": [
+				{
+					"name": "Create New Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5VSkZORGd4UlRVME5EWTBOVVkzTlRkR05qTXlRamxETmpOQk5UYzVRVUV3UlRFeU56TTJRUSJ9.eyJodHRwczovL3RvcGNvZGVyLWRldi5jb20vcm9sZXMiOlsiVG9wY29kZXIgVXNlciIsIkNvbW11bml0eSBBZG1pbiIsImRpc2NvcmQtbWFuYWdlciIsIkdhbWlmaWNhdGlvbiBBZG1pbiJdLCJodHRwczovL3RvcGNvZGVyLWRldi5jb20vdXNlcklkIjoiODg3NzQ2MTkiLCJodHRwczovL3RvcGNvZGVyLWRldi5jb20vaGFuZGxlIjoia2lyaWxkZXYiLCJodHRwczovL3RvcGNvZGVyLWRldi5jb20vdXNlcl9pZCI6ImF1dGgwfDg4Nzc0NjE5IiwiaHR0cHM6Ly90b3Bjb2Rlci1kZXYuY29tL3Rjc3NvIjoiODg3NzQ2MTl8YmFhNjMxYWZlMjNjOThlOTY4NTlhODY3MjJlMzZkNjVmNDVjMTZhMzczODlmNjhiOGQ3YjQ1YTMyZjM5IiwiaHR0cHM6Ly90b3Bjb2Rlci1kZXYuY29tL2FjdGl2ZSI6dHJ1ZSwiaHR0cHM6Ly90b3Bjb2Rlci1kZXYuY29tL2Jsb2NrSVAiOmZhbHNlLCJuaWNrbmFtZSI6ImtpcmlsZGV2IiwibmFtZSI6ImtpcmlsLmthcnR1bm92QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci80YWI2NTM2ZDViNzE0NDhmYjE3YjMxYTEyM2RlMGQzZj9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRmtpLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDIyLTA4LTA4VDE2OjM2OjUyLjM0M1oiLCJlbWFpbCI6ImtpcmlsLmthcnR1bm92QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL2F1dGgudG9wY29kZXItZGV2LmNvbS8iLCJzdWIiOiJhdXRoMHw4ODc3NDYxOSIsImF1ZCI6IkJYV1hVV25pbFZVUGROMDF0MlNlMjlUdzJaWU5HWnZIIiwiaWF0IjoxNjU5OTc2NjE3LCJleHAiOjE2NjAwNjMwMTcsIm5vbmNlIjoiTWpnd2JGQlJkRFZtYWtOV05TNUpkM2huZDJVemIzRjBXRkZEY21OUVUzWnBNR3cwUTJndGMyWjZaUT09In0.jmqbNdU1RBqka04L-EdtqFQ8BRejelIRJIYkUZIkRlpLGgOcpY-lnSV7MKBU-R7W_1NRdVzmOx_em7-bSGJnqzh0zBv0mDbrLIi09Em7gJByzjuaWFtGuFUTTd4PwedNlEIYJqTwTk6dGrCQwwAHY6ok267Uc6-i5vCyejgHmRLnJcCvATDwAkwXOLLHyUl_VYb98rovdU-UXPOOcS_kOV1a7QL-9uTzcoKLAkC-qDSF7lO26alGzwef__saza7OjZ_zLmv_mlN-VDb6S6Bwcaap-FHkhbCnE7uxiAXx5HTv2uoRTDfvXSr66qAJwFpBVIp2iwZp2qfDXmYLoPzV2Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "6azdESKoO/Topcoder_Logo_200px.png"
+								},
+								{
+									"key": "organization_id",
+									"value": "{{ORG_ID}}",
+									"type": "text"
+								},
+								{
+									"key": "badge_status",
+									"value": "Active",
+									"type": "text"
+								},
+								{
+									"key": "badge_name",
+									"value": "TCO22 Development Finalist",
+									"type": "text"
+								},
+								{
+									"key": "badge_description",
+									"value": "The TCO22 Development Finalist badge is awarded to members officially recognized as finalists in the [TCO22 Development track](https://tco22.topcoder.com/competition/development?tracks[dev-tabs]=3&tracks[dev-tco22]=3).",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

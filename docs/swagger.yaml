@@ -1,14 +1,165 @@
+swagger: '2.0'
+info:
+  version: V0.1.0
+  title: Topcoder Gamification API
+  description: >
+    API that provide access and interaction with gamification services on the Topcoder platform.
+
+
+    # Pagination
+
+
+    - Requests that return multiple items will be paginated to 20 items by
+    default.
+
+
+    - You can specify further pages with the `page` parameter (1 based).
+
+
+    - You can also set a custom page size up to 100 with the `perPage`
+    parameter.
+
+
+    # Roles
+
+    Each API endpoint has described minimal role to access. Only users with
+    specific roles can access those endpoints (where required). For insufficient
+    role 403 Forbidden HTTP response will be returned.
+
+
+    ## User roles:
+
+      + `Gamification Admin` - administrator of gamification ops
+
+    # Personally Identifiable Information
+
+    All endpoints that return member information must filter the response data
+    to exclude the personally identifiable information (properties from a
+    configurable array) unless the caller is a machine (M2M token), has
+    administrative privileges or is the member himself.
+    
+    
+    # Status codes:
+
+    The HTTP status codes to communicate with the API consumer.
+
+    + `200 OK` - Response to a successful GET, PUT, PATCH or DELETE.
+
+    + `201 Created` - When a resource is successfully created with POST.
+
+    + `400 Bad Request` - Malformed request; request body validation errors.
+
+    + `401 Unauthorized` - When no or invalid authentication details are
+    provided.
+
+    + `403 Forbidden` - User authenticated, but doesn't have access to the
+    resource.
+
+    + `404 Not Found` - When a non-existent resource is requested.
+
+    + `500 Server Error` - Something went wrong on the API end.
+    
+    
+    # Authorization:
+    
+    Authorization is when an entity proves a right to access.
+    
+    ## HTTP Authentication Schemes
+    
+    Bearer Authentication (also called token authentication) is an HTTP authentication scheme that involves security tokens called bearer tokens. We will be using Auth0 tokens that could be JWT or M2M
+    
+    
+    The client must send this token in the Authorization header when making requests to protected resources:
+    
+    
+    `Authorization: Bearer <token>`
+  
+    
+    ## Authorization via JWT tokens
+    
+    User based security tokens should be supported. Logic filtering of data should be achieved via the user based token and role. At least support for role admin vs user should be designed.
+    
+    
+    ## Important Note:
+    
+    + Tokens can be passed via headers.authorization / query.authToken, recommended way is to pass via headers.authorization.
+    
+    + While passing Authorize bearer token make sure to add `Bearer <token>`
+  license:
+    name: MIT
+    url: 'http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT'
+host: api.topcoder-dev.com
+basePath: /gamification
+schemes:
+  - https
+  - http
+securityDefinitions:
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+produces:
+  - application/json
+consumes:
+  - application/json
 paths:
-  '/gamification':
+  '/':
     get:
       tags:
         - Health
-      description: Get API health status
+      description: Get API health status.
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/Health'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  '/badges':
+    post:
+      tags:
+        - Badges
+      description: Create new badge.
+      security:
+        - bearer: []
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The image file to upload.
+          required: true
+        - in: formData
+          name: organization_id
+          type: string
+          description: The id of the organization in which the badge should be created.
+          required: true
+        - in: formData
+          name: badge_status
+          type: string
+          description: The status to set to the new badge.
+          required: true
+        - in: formData
+          name: badge_name
+          type: string
+          description: The name.
+          required: true
+        - in: formData
+          name: badge_description
+          type: string
+          description: The description in text/markdown format.
+      responses:
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
         '500':
           description: Internal server error
           schema:
@@ -19,6 +170,27 @@ definitions:
   Health:
     type: string
     default: 200
+  Badge:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The UUID of the badge.
+      organization_id:
+        type: string
+        description: The UUID of the organization this badge belongs to.
+      badge_status:
+        type: string
+        description: The current status of the badge.
+      badge_name:
+        type: string
+        description: The name of the badge.
+      badge_description:
+        type: string
+        description: The description in text/markdown format.
+      badge_image_url:
+        type: string
+        description: The URL of the badge image in the CDN S3 bucket.
   ErrorModel:
     type: object
     properties:

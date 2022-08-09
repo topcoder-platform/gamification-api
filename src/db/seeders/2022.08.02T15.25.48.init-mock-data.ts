@@ -5,7 +5,7 @@ export const up: MigrationFn = async ({ context: DB }: any) => {
   const orgId = uuidv4();
   await DB.organization.create({
     id: orgId,
-    name: 'Topcoder',
+    name: 'Topcoder.com',
   });
   await DB.tags.create({
     id: uuidv4(),

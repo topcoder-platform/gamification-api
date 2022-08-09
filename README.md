@@ -7,7 +7,7 @@ Assuming you have PostgreSQL server running locally and the database `tc_gamific
 When PostgreSQL server is ready, proceed with the commands below to get started.
 
 1. `npm i`
-2. `export GAMIFICATION_DATABASE_URL = postgres://postgres:postgres@127.0.0.1:5432/tc_gamification` - following steps require working db connection, take care to setup the URL properly and with correct credentials.
+2. `export GAMIFICATION_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/tc_gamification` - following steps require working db connection, take care to setup the URL properly and with correct credentials.
 3. `npm run init-db`
 4. `npm run seed-db` - optional step, assuming you want mock data for development.
 5. `npm run dev`
@@ -40,3 +40,12 @@ In project root type:
 `npm run sync-orm`
 
 This command will execute and update the typescript files in the `src/db/models` folder. Those are the ORM definitions used by Sequelize. Note that `sequelize-auto` has some issues and leaves unused variables defined. This could cause lint errors. Therefore we run `sequelize-auto` and after it we run `npm run lint:fix` for convenience but still you may need to do small work to clean up the generated code.
+
+## Assets Hosting
+Badge images and asstest are hosted on [AWS S3](https://s3.console.aws.amazon.com/s3/buckets/tc-gamification?region=us-east-1&tab=objects).
+
+On PROD & DEV the bucket name is the same - `tc_gamification`.
+
+We follow strict naming convention: `org_id/badge_image_id.file_ext`. This will ensure badge images are stored in folders per organization and are uniqie named.
+
+This is public access bucket, which provides access to the digital assets used by the gamification project. All files are served with proper HTTP headers. We set `CacheControl: 'max-age=31536000'` (365 days)  header to all badge images which ensures speed loading and reduces traffic.

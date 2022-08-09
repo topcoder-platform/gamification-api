@@ -1,5 +1,5 @@
 import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import type { organization, organizationId } from './organization';
 import type { organization_badges, organization_badgesId } from './organization_badges';
 import type { organization_badges_tags, organization_badges_tagsId } from './organization_badges_tags';

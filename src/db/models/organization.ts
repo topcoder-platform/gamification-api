@@ -1,5 +1,5 @@
 import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import type { badge_custom_fields, badge_custom_fieldsId } from './badge_custom_fields';
 import type { organization_badges, organization_badgesId } from './organization_badges';
 import type { tags, tagsId } from './tags';

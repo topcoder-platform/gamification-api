@@ -7,7 +7,7 @@ const rolesMiddleware = (requireRoles: string[]): RequestHandler => {
     const matchedRoles = intersection(req.authUser.roles, requireRoles);
     // make sure all required roles are present in auth JWT of this member
     if (matchedRoles.length !== requireRoles.length) {
-      next(new HttpException(403, 'Forbiden operation for your role'));
+      next(new HttpException(403, 'Forbidden operation for your role'));
     } else {
       next();
     }

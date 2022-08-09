@@ -1,5 +1,5 @@
 import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import type { organization_badges, organization_badgesId } from './organization_badges';
 
 export interface member_badgesAttributes {

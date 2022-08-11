@@ -152,6 +152,10 @@ paths:
           type: string
           description: The description in text/markdown format.
       responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Badge'
         '400':
           description: Bad request
           schema:
@@ -164,8 +168,45 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+    get:
+      tags:
+        - Badges
+      description: Get all badges in the system or partitioned by organization.
+      security:
+        - bearer: []
+      parameters:
+        - in: query
+          name: organization_id
+          type: string
+          description: The organization_id to filter results by.
+        - in: query
+          name: offset
+          type: string
+          description: The offset to use in the query.
+        - in: query
+          name: limit
+          type: string
+          description: The limit to use in the query.
 
-
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
 definitions:
   Health:
     type: string
@@ -191,6 +232,22 @@ definitions:
       badge_image_url:
         type: string
         description: The URL of the badge image in the CDN S3 bucket.
+  BadgesCollection:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The total count of badges matching the query.
+        offset:
+          type: number
+          description: The offset used in the query.
+        limit:
+          type: number
+          description: The limit used in the query.
+        rows:
+          type: array
+          items:
+            $ref: '#/definitions/Badge'
   ErrorModel:
     type: object
     properties:

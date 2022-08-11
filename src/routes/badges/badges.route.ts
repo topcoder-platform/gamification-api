@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import BadgesController from '@controllers/badges/badges.controller';
 import { Routes } from '@interfaces/routes.interface';
-import { API_BASE, ACCESS_ROLES, VALID_UPLOAD_TYPES } from '@config';
+import { API_BASE, ADMIN_ACCESS_ROLES, VALID_UPLOAD_TYPES } from '@config';
 import authMiddleware from '@middlewares/auth.middleware';
 import rolesMiddleware from '@/middlewares/roles.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
-import { CreateBadgeDto, ValidOrgIdDto } from '@/dtos/badges.dto';
+import { CreateBadgeDto, ValidOrgIdDto, GetBadgesQueryDto } from '@/dtos/badges.dto';
 import multer from 'multer';
 import fileMiddleware from '@/middlewares/file.middleware';
 
@@ -39,15 +39,24 @@ class BadgesRoute implements Routes {
   }
 
   private initializeRoutes() {
+    // Create new badge
     this.router.post(
       `${this.path}`,
       authMiddleware,
-      rolesMiddleware(ACCESS_ROLES),
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
       upload.single('file'),
       validationMiddleware(ValidOrgIdDto, 'body', false, true, false),
       fileMiddleware,
       validationMiddleware(CreateBadgeDto, 'body'),
       this.badgesController.createNewBadge,
+    );
+    // Get badges
+    this.router.get(
+      `${this.path}`,
+      authMiddleware,
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
+      validationMiddleware(GetBadgesQueryDto, 'query'),
+      this.badgesController.getOrgBadges,
     );
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsUUID, IsUrl } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString } from 'class-validator';
 
 export class CreateBadgeDto {
   @IsString()
@@ -31,4 +31,19 @@ export class ValidOrgIdDto {
   @IsNotEmpty()
   @IsUUID()
   public organization_id: string;
+}
+
+export class GetBadgesQueryDto {
+  @IsOptional()
+  @IsString()
+  @IsUUID()
+  public organization_id: string;
+
+  @IsOptional()
+  @IsNumberString()
+  public limit: string;
+
+  @IsOptional()
+  @IsNumberString()
+  public offset: string;
 }

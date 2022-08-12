@@ -65,6 +65,7 @@ export class organization extends Model<organizationAttributes, organizationCrea
         name: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: 'org_name',
         },
       },
       {
@@ -73,6 +74,11 @@ export class organization extends Model<organizationAttributes, organizationCrea
         schema: 'public',
         timestamps: false,
         indexes: [
+          {
+            name: 'org_name',
+            unique: true,
+            fields: [{ name: 'name' }],
+          },
           {
             name: 'org_pkey',
             unique: true,

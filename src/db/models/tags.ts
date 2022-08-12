@@ -70,6 +70,7 @@ export class tags extends Model<tagsAttributes, tagsCreationAttributes> implemen
         tag_value: {
           type: DataTypes.TEXT,
           allowNull: false,
+          unique: 'org_tag',
         },
       },
       {
@@ -78,6 +79,11 @@ export class tags extends Model<tagsAttributes, tagsCreationAttributes> implemen
         schema: 'public',
         timestamps: false,
         indexes: [
+          {
+            name: 'org_tag',
+            unique: true,
+            fields: [{ name: 'organization_id' }, { name: 'tag_value' }],
+          },
           {
             name: 'tags_pkey',
             unique: true,

@@ -95,6 +95,7 @@ export class badge_custom_fields
         name: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: 'org_field',
         },
         value_type: {
           type: DataTypes.STRING,
@@ -119,6 +120,11 @@ export class badge_custom_fields
             name: 'badge_custom_fields_pkey',
             unique: true,
             fields: [{ name: 'field_def_id' }],
+          },
+          {
+            name: 'org_field',
+            unique: true,
+            fields: [{ name: 'organization_id' }, { name: 'name' }],
           },
           {
             name: 'unique_defs',

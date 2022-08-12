@@ -3,71 +3,84 @@
 BEGIN;
 
 
+CREATE TABLE IF NOT EXISTS public.badge_custom_fields
+(
+    organization_id uuid NOT NULL,
+    field_def_id uuid NOT NULL,
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    value_type character varying COLLATE pg_catalog."default" NOT NULL,
+    text_value text COLLATE pg_catalog."default",
+    number_value numeric,
+    CONSTRAINT badge_custom_fields_pkey PRIMARY KEY (field_def_id),
+    CONSTRAINT org_field UNIQUE (organization_id, name),
+    CONSTRAINT unique_defs UNIQUE (organization_id, field_def_id)
+);
+
 CREATE TABLE IF NOT EXISTS public.member_badges
 (
     user_id bigint NOT NULL,
     org_badge_id uuid NOT NULL,
     awarded_at timestamp with time zone NOT NULL,
-    PRIMARY KEY (user_id),
+    awarded_by character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT member_badges_pkey PRIMARY KEY (user_id),
     CONSTRAINT unique_member_badge UNIQUE (user_id, org_badge_id, awarded_at)
-);
-
-CREATE TABLE IF NOT EXISTS public.organization_badges
-(
-    id uuid,
-    organization_id uuid NOT NULL,
-    badge_status character varying NOT NULL,
-    badge_name character varying NOT NULL,
-    badge_description text,
-    badge_image_url character varying NOT NULL,
-    CONSTRAINT org_badge_pkey PRIMARY KEY (id),
-    CONSTRAINT org_badge_unique_key UNIQUE (id, organization_id)
-);
-
-CREATE TABLE IF NOT EXISTS public.tags
-(
-    id uuid,
-    organization_id uuid NOT NULL,
-    tag_value text NOT NULL,
-    CONSTRAINT tags_pkey PRIMARY KEY (id),
-    CONSTRAINT tags_unique_key UNIQUE (id, organization_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.organization
 (
-    id uuid,
-    name character varying NOT NULL,
-    CONSTRAINT org_pkey PRIMARY KEY (id)
+    id uuid NOT NULL,
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT org_pkey PRIMARY KEY (id),
+    CONSTRAINT org_name UNIQUE (name)
 );
 
-CREATE TABLE IF NOT EXISTS public.badge_custom_fields
+CREATE TABLE IF NOT EXISTS public.organization_badges
 (
+    id uuid NOT NULL,
     organization_id uuid NOT NULL,
-    field_def_id uuid,
-    name character varying NOT NULL,
-    value_type character varying NOT NULL,
-    text_value text,
-    number_value numeric,
-    PRIMARY KEY (field_def_id),
-    CONSTRAINT unique_defs UNIQUE (organization_id, field_def_id)
+    badge_status character varying COLLATE pg_catalog."default" NOT NULL,
+    badge_name character varying COLLATE pg_catalog."default" NOT NULL,
+    badge_description text COLLATE pg_catalog."default",
+    badge_image_url character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT org_badge_pkey PRIMARY KEY (id),
+    CONSTRAINT org_badge_name UNIQUE (organization_id, badge_name),
+    CONSTRAINT org_badge_unique_key UNIQUE (id, organization_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.organization_badges_custom_fields
+(
+    custom_field_id uuid NOT NULL,
+    badges_id uuid NOT NULL,
+    CONSTRAINT organization_badges_custom_fields_pkey PRIMARY KEY (badges_id, custom_field_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.organization_badges_tags
 (
     tags_id uuid NOT NULL,
     organization_badges_id uuid NOT NULL,
-    PRIMARY KEY (organization_badges_id, tags_id)
+    CONSTRAINT organization_badges_tags_pkey PRIMARY KEY (organization_badges_id, tags_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.organization_badges_custom_fields
+CREATE TABLE IF NOT EXISTS public.tags
 (
-    custom_field_id uuid,
-    badges_id uuid,
-    PRIMARY KEY (badges_id, custom_field_id)
+    id uuid NOT NULL,
+    organization_id uuid NOT NULL,
+    tag_value text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT tags_pkey PRIMARY KEY (id),
+    CONSTRAINT org_tag UNIQUE (organization_id, tag_value),
+    CONSTRAINT tags_unique_key UNIQUE (id, organization_id)
 );
+
+ALTER TABLE IF EXISTS public.badge_custom_fields
+    ADD CONSTRAINT badge_custom_fields_organization_id_fkey FOREIGN KEY (organization_id)
+    REFERENCES public.organization (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
 
 ALTER TABLE IF EXISTS public.member_badges
-    ADD FOREIGN KEY (org_badge_id)
+    ADD CONSTRAINT member_badges_org_badge_id_fkey FOREIGN KEY (org_badge_id)
     REFERENCES public.organization_badges (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -75,39 +88,15 @@ ALTER TABLE IF EXISTS public.member_badges
 
 
 ALTER TABLE IF EXISTS public.organization_badges
-    ADD FOREIGN KEY (organization_id)
+    ADD CONSTRAINT organization_badges_organization_id_fkey FOREIGN KEY (organization_id)
     REFERENCES public.organization (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.tags
-    ADD FOREIGN KEY (organization_id)
-    REFERENCES public.organization (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.badge_custom_fields
-    ADD FOREIGN KEY (organization_id)
-    REFERENCES public.organization (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.organization_badges_tags
-    ADD FOREIGN KEY (tags_id)
-    REFERENCES public.tags (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.organization_badges_tags
-    ADD FOREIGN KEY (organization_badges_id)
+ALTER TABLE IF EXISTS public.organization_badges_custom_fields
+    ADD CONSTRAINT organization_badges_custom_fields_badges_id_fkey FOREIGN KEY (badges_id)
     REFERENCES public.organization_badges (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -115,16 +104,32 @@ ALTER TABLE IF EXISTS public.organization_badges_tags
 
 
 ALTER TABLE IF EXISTS public.organization_badges_custom_fields
-    ADD FOREIGN KEY (custom_field_id)
+    ADD CONSTRAINT organization_badges_custom_fields_custom_field_id_fkey FOREIGN KEY (custom_field_id)
     REFERENCES public.badge_custom_fields (field_def_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges_custom_fields
-    ADD FOREIGN KEY (badges_id)
+ALTER TABLE IF EXISTS public.organization_badges_tags
+    ADD CONSTRAINT organization_badges_tags_organization_badges_id_fkey FOREIGN KEY (organization_badges_id)
     REFERENCES public.organization_badges (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.organization_badges_tags
+    ADD CONSTRAINT organization_badges_tags_tags_id_fkey FOREIGN KEY (tags_id)
+    REFERENCES public.tags (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.tags
+    ADD CONSTRAINT tags_organization_id_fkey FOREIGN KEY (organization_id)
+    REFERENCES public.organization (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

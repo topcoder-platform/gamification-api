@@ -15,7 +15,6 @@ class BadgesController {
    */
   public createNewBadge = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
-      console.log('createNewBadge', req.file, req.body);
       const newBadge = await createBadge(req.body);
       // all set in db, delete the TEMP tag from image file
       // there is Lifecycle rule configured wich will clean up all TEMP uploads after 1 day

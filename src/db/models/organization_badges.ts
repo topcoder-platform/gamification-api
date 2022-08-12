@@ -138,6 +138,7 @@ export class organization_badges
         badge_name: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: 'org_badge_name',
         },
         badge_description: {
           type: DataTypes.TEXT,
@@ -154,6 +155,11 @@ export class organization_badges
         schema: 'public',
         timestamps: false,
         indexes: [
+          {
+            name: 'org_badge_name',
+            unique: true,
+            fields: [{ name: 'organization_id' }, { name: 'badge_name' }],
+          },
           {
             name: 'org_badge_pkey',
             unique: true,

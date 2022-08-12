@@ -6,6 +6,7 @@ export interface member_badgesAttributes {
   user_id: number;
   org_badge_id: string;
   awarded_at: Date;
+  awarded_by: string;
 }
 
 export type member_badgesPk = 'user_id';
@@ -16,6 +17,7 @@ export class member_badges extends Model<member_badgesAttributes, member_badgesC
   user_id!: number;
   org_badge_id!: string;
   awarded_at!: Date;
+  awarded_by!: string;
 
   // member_badges belongsTo organization_badges via org_badge_id
   org_badge!: organization_badges;
@@ -45,6 +47,10 @@ export class member_badges extends Model<member_badgesAttributes, member_badgesC
           type: DataTypes.DATE,
           allowNull: false,
           unique: 'unique_member_badge',
+        },
+        awarded_by: {
+          type: DataTypes.STRING,
+          allowNull: false,
         },
       },
       {

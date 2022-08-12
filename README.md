@@ -10,7 +10,8 @@ When PostgreSQL server is ready, proceed with the commands below to get started.
 2. `export GAMIFICATION_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/tc_gamification` - following steps require working db connection, take care to setup the URL properly and with correct credentials.
 3. `npm run init-db`
 4. `npm run seed-db` - optional step, assuming you want mock data for development.
-5. `npm run dev`
+5. Set the local environment - we keep a sample file with all vars one needs to have set to be able to run the API locally. Check the `.env.development.local.sample`, fill it with proper values, and finally rename it to `.env.development.local`. Done, vars will be picked-up on server start.
+6. `npm run dev`
 
 ## Docker support
 WIP

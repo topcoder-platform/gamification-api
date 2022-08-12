@@ -107,6 +107,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Assign Badge to Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id/assign/:member_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id",
+								"assign",
+								":member_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "bc39b152-e0e3-4984-962b-f1eba67229da"
+								},
+								{
+									"key": "member_id",
+									"value": "88774619"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

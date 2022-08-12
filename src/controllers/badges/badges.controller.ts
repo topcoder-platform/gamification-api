@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { createBadge, getBadges } from '@services/badges.service';
+import { createBadge, getBadges, assignBadge } from '@services/badges.service';
+import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 
@@ -45,6 +46,24 @@ class BadgesController {
         limit: Number(limit || DEFAULT_PAGE_LIMIT),
         rows,
       });
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+  /**
+   * Assign a badge to a member
+   */
+  public assignBadgeToMember = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { member_id, badge_id } = req.params;
+      const member = await getMemberInfo(member_id);
+      if (!member) throw new Error(`Member ${member_id} does not exists`);
+      if (member.status !== 'ACTIVE') throw new Error(`Member ${member_id} is not in ACTIVE status`);
+      // all good - try to assing the badge
+      const assign = await assignBadge(badge_id, member_id, req.authUser.nickname || req.authUser.name);
+
+      res.json(assign);
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

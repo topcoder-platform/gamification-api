@@ -18,6 +18,7 @@ export async function createBadge(badge: CreateBadgeDto) {
 /**
  * Get all badges in the system or partitioned by org id
  * @param organization_id scope under org id
+ * @returns Promise
  */
 export async function getBadges(query: GetBadgesQueryDto) {
   // default query
@@ -40,4 +41,20 @@ export async function getBadges(query: GetBadgesQueryDto) {
   }
 
   return DB.organization_badges.findAndCountAll(dbQuery);
+}
+
+/**
+ * Assign a badge to a member
+ * @param badge_id which badge
+ * @param member_id to whom
+ * @param awarded_by by who
+ * @returns Promise
+ */
+export async function assignBadge(badge_id: string, member_id: string, awarded_by: string) {
+  return DB.member_badges.create({
+    user_id: member_id,
+    org_badge_id: badge_id,
+    awarded_at: new Date(),
+    awarded_by,
+  });
 }

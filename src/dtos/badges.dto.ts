@@ -47,3 +47,12 @@ export class GetBadgesQueryDto {
   @IsNumberString()
   public offset: string;
 }
+
+export class AssignBadgeToMemberDto {
+  @IsString()
+  @IsUUID()
+  public badge_id: string;
+
+  @IsNumberString()
+  public member_id: string;
+}

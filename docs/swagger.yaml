@@ -117,6 +117,7 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+
   '/badges':
     post:
       tags:
@@ -187,7 +188,6 @@ paths:
           name: limit
           type: string
           description: The limit to use in the query.
-
       responses:
         '200':
           description: OK
@@ -207,6 +207,43 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+
+  '/badges/{badge_id}/assign/{member_id}':
+    post:
+      tags:
+        - Badges
+      description: Assign a badge to a member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge to assign.
+          required: true
+        - in: path
+          name: member_id
+          type: string
+          description: The member.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Badge'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  
 definitions:
   Health:
     type: string

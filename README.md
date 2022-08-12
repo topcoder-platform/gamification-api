@@ -49,3 +49,15 @@ On PROD & DEV the bucket name is the same - `tc_gamification`.
 We follow strict naming convention: `org_id/badge_image_id.file_ext`. This will ensure badge images are stored in folders per organization and are uniqie named.
 
 This is public access bucket, which provides access to the digital assets used by the gamification project. All files are served with proper HTTP headers. We set `CacheControl: 'max-age=31536000'` (365 days)  header to all badge images which ensures speed loading and reduces traffic.
+
+## Serverless and CloudFormation
+
+This project uses an infrastructure as code (IaC) approach to managing cloud-based resources. This allows us to keep the definition and desired state of the supporting resources in sync with our code and versioned alongside every other project artifact.
+
+We use the [Serverless.com](https://serverless.com) framework for AWS to manage our CloudFormation stacks and the resources they define. 
+
+To use serverless, first install it (this assumes you already have NodeJS installed):
+
+```bash
+$ npm install -g serverless
+```

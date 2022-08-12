@@ -1,0 +1,20 @@
+service: serverless-gamification-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: dev
+  runtime: nodejs14.x
+  profile: 811668436784_AWSPowerUserAccess
+
+  environment:
+    POSTGRESQL_HOST:
+      Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Address]
+    POSTGRESQL_PORT: 
+      Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Port]        
+
+resources:
+  Resources:
+    PostgreSqlRDSInstance: ${file(./resource/PostgreSqlRDSInstance.yml)}
+

@@ -1,0 +1,13 @@
+Type: AWS::RDS::DBInstance
+Properties:
+  MasterUsername: postgres
+  MasterUserPassword: password
+  AllocatedStorage: 20
+  DBName: tc_gamification
+  DBInstanceClass: db.t4g.small
+  DBInstanceIdentifier: gamification
+  VPCSecurityGroups:
+    - sg-c31b46a6
+  DBSubnetGroupName: mysql-db-subnet
+  Engine: postgres
+  PubliclyAccessible: false

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { createBadge, getBadges, assignBadge } from '@services/badges.service';
+import { createBadge, getBadges, assignBadge, removeBadge } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
@@ -64,6 +64,21 @@ class BadgesController {
       const assign = await assignBadge(badge_id, member_id, req.authUser.nickname || req.authUser.name);
 
       res.json(assign);
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+  /**
+   * Unassign a badge from a member
+   */
+  public unassignBadgeFromMember = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { member_id, badge_id } = req.params;
+      // all good - try to unassing the badge
+      const unassign = await removeBadge(badge_id, member_id);
+
+      res.json(unassign);
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

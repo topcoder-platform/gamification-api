@@ -243,6 +243,38 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+    delete:
+      tags:
+        - Badges
+      description: Unassign a badge from a member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge to unassign.
+          required: true
+        - in: path
+          name: member_id
+          type: string
+          description: The member.
+          required: true
+      responses:
+        '200':
+          description: OK. Returns 1 when badge was found and unassigned or 0 if nothing changed.
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
   
 definitions:
   Health:

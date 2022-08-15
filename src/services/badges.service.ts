@@ -58,3 +58,18 @@ export async function assignBadge(badge_id: string, member_id: string, awarded_b
     awarded_by,
   });
 }
+
+/**
+ * Unassign a badge to a member
+ * @param badge_id which badge
+ * @param member_id from whom
+ * @returns Promise
+ */
+export async function removeBadge(badge_id: string, member_id: string) {
+  return DB.member_badges.destroy({
+    where: {
+      user_id: member_id,
+      org_badge_id: badge_id,
+    },
+  });
+}

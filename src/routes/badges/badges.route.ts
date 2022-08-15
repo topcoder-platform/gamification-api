@@ -66,6 +66,14 @@ class BadgesRoute implements Routes {
       validationMiddleware(AssignBadgeToMemberDto, 'params'),
       this.badgesController.assignBadgeToMember,
     );
+    // Unssign a badge from a member
+    this.router.delete(
+      `${this.path}/:badge_id/assign/:member_id`,
+      authMiddleware,
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
+      validationMiddleware(AssignBadgeToMemberDto, 'params'),
+      this.badgesController.unassignBadgeFromMember,
+    );
   }
 }
 

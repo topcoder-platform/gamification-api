@@ -109,6 +109,40 @@
 					"response": []
 				},
 				{
+					"name": "Get Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "bc39b152-e0e3-4984-962b-f1eba67229dd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Member Badges",
 					"request": {
 						"auth": {
@@ -117,12 +151,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/badges/:member_id?tags=TCO,2022&tags_query_type=in",
+							"raw": "{{URL}}/badges/assigned/:member_id?tags=TCO,2022&tags_query_type=in",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"badges",
+								"assigned",
 								":member_id"
 							],
 							"query": [

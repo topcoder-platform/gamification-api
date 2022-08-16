@@ -12,6 +12,7 @@ import {
   AssignBadgeToMemberDto,
   VallidMemberIdDto,
   GetMemberBadgesQueryDto,
+  ValidBadgeIdDto,
 } from '@/dtos/badges.dto';
 import multer from 'multer';
 import fileMiddleware from '@/middlewares/file.middleware';
@@ -65,9 +66,17 @@ class BadgesRoute implements Routes {
       validationMiddleware(GetBadgesQueryDto, 'query'),
       this.badgesController.getOrgBadges,
     );
+    // Get badge details
+    this.router.get(
+      `${this.path}/:badge_id`,
+      authMiddleware,
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
+      validationMiddleware(ValidBadgeIdDto, 'params'),
+      this.badgesController.getBadge,
+    );
     // Get member badges
     this.router.get(
-      `${this.path}/:member_id`,
+      `${this.path}/assigned/:member_id`,
       validationMiddleware(VallidMemberIdDto, 'params'),
       validationMiddleware(GetMemberBadgesQueryDto, 'query'),
       this.badgesController.getMemberBadges,

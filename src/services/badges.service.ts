@@ -97,7 +97,7 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
           as: 'organization',
         },
         {
-          // include org meta
+          // include badge tags
           model: DB.tags,
           as: 'tags_id_tags',
         },
@@ -123,4 +123,32 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
   }
 
   return DB.member_badges.findAndCountAll(dbQuery);
+}
+
+/**
+ * Get a badge and all members that have earned it
+ * @param badge_id badge id to query
+ * @returns Promise
+ */
+export async function getBadgeWithMembers(badge_id: string) {
+  // default query
+  const dbQuery: any = {
+    where: {
+      id: badge_id,
+    },
+    include: [
+      {
+        // include members earned the badge
+        model: DB.member_badges,
+        as: 'member_badges',
+      },
+      {
+        // include badge tags
+        model: DB.tags,
+        as: 'tags_id_tags',
+      },
+    ],
+  };
+
+  return DB.organization_badges.findOne(dbQuery);
 }

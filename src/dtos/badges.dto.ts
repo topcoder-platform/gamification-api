@@ -33,6 +33,13 @@ export class ValidOrgIdDto {
   public organization_id: string;
 }
 
+export class ValidBadgeIdDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID()
+  public badge_id: string;
+}
+
 export class GetBadgesQueryDto {
   @IsOptional()
   @IsString()

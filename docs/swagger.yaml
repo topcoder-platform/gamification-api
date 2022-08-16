@@ -208,7 +208,38 @@ paths:
           schema:
             $ref: '#/definitions/ErrorModel'
 
-  '/badges/{member_id}':
+  '/badges/{badge_id}':
+    get:
+      tags:
+        - Badges
+      description: Get badge details and all members earned it.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge id.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BadgeWithOwners'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  '/badges/assigned/{member_id}':
     get:
       tags:
         - Badges
@@ -350,6 +381,39 @@ definitions:
       badge_image_url:
         type: string
         description: The URL of the badge image in the CDN S3 bucket.
+  BadgeWithOwners:
+    allOf:
+      - $ref: '#/definitions/Badge'
+      - type: object
+        properties:
+          member_badges:
+            type: array
+            items:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: The memeber id.
+                org_badge_id:
+                  type: string
+                  description: The UUID of the badge.
+                awarded_at:
+                  type: string
+                  description: The date the badge was assigned to the user.
+                awarded_by:
+                  type: string
+                  description: The handle or process awarded the badge.
+          tags_id_tags:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: tag id
+                tag_value:
+                  type: string
+                  description: tag value
   BadgesCollection:
       type: object
       properties:

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { createBadge, getBadges, assignBadge, removeBadge, getMemberEarnedBadges } from '@services/badges.service';
+import { createBadge, getBadges, assignBadge, removeBadge, getMemberEarnedBadges, getBadgeWithMembers } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
@@ -99,6 +99,20 @@ class BadgesController {
         limit: Number(limit || DEFAULT_PAGE_LIMIT),
         rows,
       });
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+  /**
+   * Get badge
+   */
+  public getBadge = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { badge_id } = req.params;
+      const badge = await getBadgeWithMembers(badge_id);
+
+      res.json(badge);
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

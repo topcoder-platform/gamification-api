@@ -1,5 +1,5 @@
 import DB from '@/db';
-import { CreateBadgeDto, GetBadgesQueryDto } from '@/dtos/badges.dto';
+import { CreateBadgeDto, GetBadgesQueryDto, GetMemberBadgesQueryDto } from '@/dtos/badges.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_PAGE_LIMIT } from '@config';
 
@@ -72,4 +72,55 @@ export async function removeBadge(badge_id: string, member_id: string) {
       org_badge_id: badge_id,
     },
   });
+}
+
+/**
+ * Get member assigned badges
+ * @param member_id The member id
+ * @param query Query to run
+ * @returns Promise
+ */
+export async function getMemberEarnedBadges(member_id: string, query: GetMemberBadgesQueryDto) {
+  // default query
+  const dbQuery: any = {
+    where: {
+      user_id: member_id,
+    },
+    include: {
+      // include badge meta
+      model: DB.organization_badges,
+      as: 'org_badge',
+      include: [
+        {
+          // include org meta
+          model: DB.organization,
+          as: 'organization',
+        },
+        {
+          // include org meta
+          model: DB.tags,
+          as: 'tags_id_tags',
+        },
+      ],
+    },
+    offset: query.offset || 0,
+    limit: query.limit || DEFAULT_PAGE_LIMIT,
+  };
+  // filter by organization
+  if (query.organization_id) {
+    dbQuery.include.where = {
+      organization_id: query.organization_id,
+    };
+  }
+  // filter by tags
+  if (query.tags) {
+    dbQuery.include.include[1].where = {
+      tag_value: {
+        // see: https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+        [DB.Sequelize.Op[query.tags_query_type || 'all']]: query.tags.split(','),
+      },
+    };
+  }
+
+  return DB.member_badges.findAndCountAll(dbQuery);
 }

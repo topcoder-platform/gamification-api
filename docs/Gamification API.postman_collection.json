@@ -109,6 +109,58 @@
 					"response": []
 				},
 				{
+					"name": "Get Member Badges",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:member_id?tags=TCO,2022&tags_query_type=in",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":member_id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "organization_id",
+									"value": "{{ORG_ID}}",
+									"disabled": true
+								},
+								{
+									"key": "tags",
+									"value": "TCO,2022"
+								},
+								{
+									"key": "tags_query_type",
+									"value": "in"
+								}
+							],
+							"variable": [
+								{
+									"key": "member_id",
+									"value": "88774619"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Assign Badge to Member",
 					"request": {
 						"auth": {

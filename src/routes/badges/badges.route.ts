@@ -5,7 +5,14 @@ import { API_BASE, ADMIN_ACCESS_ROLES, VALID_UPLOAD_TYPES } from '@config';
 import authMiddleware from '@middlewares/auth.middleware';
 import rolesMiddleware from '@/middlewares/roles.middleware';
 import validationMiddleware from '@/middlewares/validation.middleware';
-import { CreateBadgeDto, ValidOrgIdDto, GetBadgesQueryDto, AssignBadgeToMemberDto } from '@/dtos/badges.dto';
+import {
+  CreateBadgeDto,
+  ValidOrgIdDto,
+  GetBadgesQueryDto,
+  AssignBadgeToMemberDto,
+  VallidMemberIdDto,
+  GetMemberBadgesQueryDto,
+} from '@/dtos/badges.dto';
 import multer from 'multer';
 import fileMiddleware from '@/middlewares/file.middleware';
 
@@ -57,6 +64,13 @@ class BadgesRoute implements Routes {
       rolesMiddleware(ADMIN_ACCESS_ROLES),
       validationMiddleware(GetBadgesQueryDto, 'query'),
       this.badgesController.getOrgBadges,
+    );
+    // Get member badges
+    this.router.get(
+      `${this.path}/:member_id`,
+      validationMiddleware(VallidMemberIdDto, 'params'),
+      validationMiddleware(GetMemberBadgesQueryDto, 'query'),
+      this.badgesController.getMemberBadges,
     );
     // Assign a badge to a member
     this.router.post(

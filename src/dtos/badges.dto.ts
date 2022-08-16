@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString, IsIn } from 'class-validator';
 
 export class CreateBadgeDto {
   @IsString()
@@ -55,4 +55,32 @@ export class AssignBadgeToMemberDto {
 
   @IsNumberString()
   public member_id: string;
+}
+export class VallidMemberIdDto {
+  @IsNumberString()
+  public member_id: string;
+}
+
+export class GetMemberBadgesQueryDto {
+  @IsOptional()
+  @IsString()
+  @IsUUID()
+  public organization_id: string;
+
+  @IsOptional()
+  @IsString()
+  public tags: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['all', 'in', 'notIn', 'any'])
+  public tags_query_type: string;
+
+  @IsOptional()
+  @IsNumberString()
+  public limit: string;
+
+  @IsOptional()
+  @IsNumberString()
+  public offset: string;
 }

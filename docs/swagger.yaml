@@ -208,6 +208,55 @@ paths:
           schema:
             $ref: '#/definitions/ErrorModel'
 
+  '/badges/{member_id}':
+    get:
+      tags:
+        - Badges
+      description: Get badges earned by a member. Public endpoint.
+      parameters:
+        - in: path
+          name: member_id
+          type: string
+          description: The member user_id.
+          required: true
+        - in: query
+          name: organization_id
+          type: string
+          description: The organization_id to filter results by.
+        - in: query
+          name: tags
+          type: string
+          description: Filter results by comma-separated list of tags. For instance - TCO,2022,...
+        - in: query
+          name: tags_query_type
+          type: string
+          description: The type of opp to apply on tags. Defaults to 'all' if not set. See https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+        - in: query
+          name: offset
+          type: string
+          description: The offset to use in the query.
+        - in: query
+          name: limit
+          type: string
+          description: The limit to use in the query.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EarnedBadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
   '/badges/{badge_id}/assign/{member_id}':
     post:
       tags:
@@ -317,6 +366,37 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/Badge'
+  EarnedBadgesCollection:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The total count of badges matching the query.
+        offset:
+          type: number
+          description: The offset used in the query.
+        limit:
+          type: number
+          description: The limit used in the query.
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                description: The memeber id.
+              org_badge_id:
+                type: string
+                description: The UUID of the badge.
+              awarded_at:
+                type: string
+                description: The date the badge was assigned to the user.
+              awarded_by:
+                type: string
+                description: The handle or process awarded the badge.
+              org_badge:
+                $ref: '#/definitions/Badge'
   ErrorModel:
     type: object
     properties:

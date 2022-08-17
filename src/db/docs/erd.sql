@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS public.member_badges
     awarded_at timestamp with time zone NOT NULL,
     awarded_by character varying COLLATE pg_catalog."default" NOT NULL,
     user_handle character varying COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT member_badges_pkey PRIMARY KEY (user_id),
-    CONSTRAINT unique_member_badge UNIQUE (user_id, org_badge_id, awarded_at)
+    CONSTRAINT badge_per_user PRIMARY KEY (user_id, org_badge_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.organization

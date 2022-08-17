@@ -10,7 +10,7 @@ export interface member_badgesAttributes {
   user_handle: string;
 }
 
-export type member_badgesPk = 'user_id';
+export type member_badgesPk = 'user_id' | 'org_badge_id';
 export type member_badgesId = member_badges[member_badgesPk];
 export type member_badgesCreationAttributes = member_badgesAttributes;
 
@@ -34,21 +34,19 @@ export class member_badges extends Model<member_badgesAttributes, member_badgesC
           type: DataTypes.BIGINT,
           allowNull: false,
           primaryKey: true,
-          unique: 'unique_member_badge',
         },
         org_badge_id: {
           type: DataTypes.UUID,
           allowNull: false,
+          primaryKey: true,
           references: {
             model: 'organization_badges',
             key: 'id',
           },
-          unique: 'unique_member_badge',
         },
         awarded_at: {
           type: DataTypes.DATE,
           allowNull: false,
-          unique: 'unique_member_badge',
         },
         awarded_by: {
           type: DataTypes.STRING,
@@ -66,14 +64,9 @@ export class member_badges extends Model<member_badgesAttributes, member_badgesC
         timestamps: false,
         indexes: [
           {
-            name: 'member_badges_pkey',
+            name: 'badge_per_user',
             unique: true,
-            fields: [{ name: 'user_id' }],
-          },
-          {
-            name: 'unique_member_badge',
-            unique: true,
-            fields: [{ name: 'user_id' }, { name: 'org_badge_id' }, { name: 'awarded_at' }],
+            fields: [{ name: 'user_id' }, { name: 'org_badge_id' }],
           },
         ],
       },

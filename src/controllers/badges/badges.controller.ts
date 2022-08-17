@@ -1,8 +1,19 @@
 import { NextFunction, Request, Response } from 'express';
-import { createBadge, getBadges, assignBadge, removeBadge, getMemberEarnedBadges, getBadgeWithMembers } from '@services/badges.service';
+import {
+  createBadge,
+  getBadges,
+  assignBadge,
+  removeBadge,
+  getMemberEarnedBadges,
+  getBadgeWithMembers,
+  bulkAssignBadges,
+} from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
+import { parse } from 'csv-parse';
+import { has } from 'lodash';
+import { validate as uuidValidate } from 'uuid';
 
 // config the AWS S3 environment
 const s3 = new AWS.S3({
@@ -61,7 +72,7 @@ class BadgesController {
       if (!member) throw new Error(`Member ${member_id} does not exists`);
       if (member.status !== 'ACTIVE') throw new Error(`Member ${member_id} is not in ACTIVE status`);
       // all good - try to assing the badge
-      const assign = await assignBadge(badge_id, member_id, req.authUser.nickname || req.authUser.name);
+      const assign = await assignBadge(badge_id, member_id, req.authUser.nickname || req.authUser.name, member.handle);
 
       res.json(assign);
     } catch (error) {
@@ -113,6 +124,51 @@ class BadgesController {
       const badge = await getBadgeWithMembers(badge_id);
 
       res.json(badge);
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+
+  public bulkAssignBadges = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { file } = req;
+      if (!file) throw new Error('CSV file not provided');
+      // try parse the file and process the records...
+      parse(
+        file.buffer.toString(),
+        {
+          columns: true,
+        },
+        async (err, records) => {
+          if (err) {
+            if (!err.status) err.status = 400;
+            return next(err);
+          }
+          // we good, try process the records
+          try {
+            const assignments = await bulkAssignBadges(
+              records.map((r: { tc_handle: any; badge_id: string; awarded_at: string | number | Date; awarded_by: any }) => {
+                if (!has(r, 'tc_handle') || !has(r, 'badge_id'))
+                  throw new Error('CSV has invalid structure, tc_handle & badge_id are required fields');
+                if (!uuidValidate(r.badge_id)) throw new Error('CSV has invalid structure, badge_id has to be UUIDs');
+                // map to db fields
+                return {
+                  user_handle: r.tc_handle,
+                  org_badge_id: r.badge_id,
+                  awarded_at: (Number(new Date(r.awarded_at)) ? new Date(r.awarded_at) : false) || new Date(),
+                  awarded_by: r.awarded_by || req.authUser.nickname || req.authUser.name,
+                };
+              }),
+            );
+            res.json(assignments);
+          } catch (e) {
+            console.log(e);
+            if (!e.status) e.status = 400;
+            next(e);
+          }
+        },
+      );
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

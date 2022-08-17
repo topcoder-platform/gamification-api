@@ -355,6 +355,39 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+            
+  '/badges/assign':
+    post:
+      tags:
+        - Badges
+      description: Bulk assign badges to members from CSV file.
+      security:
+        - bearer: []
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The CSV file to upload and import.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EarnedBadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
   
 definitions:
   Health:

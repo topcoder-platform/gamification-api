@@ -2,6 +2,8 @@ import DB from '@/db';
 import { CreateBadgeDto, GetBadgesQueryDto, GetMemberBadgesQueryDto } from '@/dtos/badges.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_PAGE_LIMIT } from '@config';
+import { has } from 'lodash';
+import { getMemberInfoByHandle } from '@services/members.service';
 
 /**
  * Creates new badge under the provided organization
@@ -50,12 +52,13 @@ export async function getBadges(query: GetBadgesQueryDto) {
  * @param awarded_by by who
  * @returns Promise
  */
-export async function assignBadge(badge_id: string, member_id: string, awarded_by: string) {
+export async function assignBadge(badge_id: string, member_id: string, awarded_by: string, user_handle: string) {
   return DB.member_badges.create({
     user_id: member_id,
     org_badge_id: badge_id,
     awarded_at: new Date(),
     awarded_by,
+    user_handle,
   });
 }
 
@@ -151,4 +154,43 @@ export async function getBadgeWithMembers(badge_id: string) {
   };
 
   return DB.organization_badges.findOne(dbQuery);
+}
+
+// used to cache calls for finding user ids from tc_handles
+const HANDLE_ID_MAP = {};
+/**
+ * Bulk import badge assignments
+ * @param records the data
+ * @returns Promise
+ */
+export async function bulkAssignBadges(records: [{ user_handle: string; org_badge_id: string; awarded_at: Date; awarded_by: string }]) {
+  // process the records,
+  // - find user_id from user_handle
+  // - find badge_id from badge_name
+  const bulkRecords = [];
+  for (const r of records) {
+    const newR: any = r;
+    // check if we have the user_id of this handle?
+    if (has(HANDLE_ID_MAP, r.user_handle)) {
+      // yes - use it
+      newR.user_id = HANDLE_ID_MAP[r.user_handle];
+    } else {
+      // no - find it
+      try {
+        const userInfo = await getMemberInfoByHandle(r.user_handle);
+        // check if active member
+        if (userInfo.status !== 'ACTIVE') throw new Error(`Member ${r.user_handle} is not in ACTIVE status`);
+        // all good - use the id
+        newR.user_id = userInfo.userId;
+        HANDLE_ID_MAP[r.user_handle] = userInfo.userId;
+      } catch (e) {
+        throw new Error(`couldn't find any data for handle: ${r.user_handle}`);
+      }
+    }
+    // store in temp
+    bulkRecords.push(newR);
+  }
+  // store in db
+  console.log('bulk create', bulkRecords);
+  return DB.member_badges.bulkCreate(bulkRecords);
 }

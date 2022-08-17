@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
   secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
-const fileMiddleware = (req: Request | any, res: Response, next: NextFunction) => {
+const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunction) => {
   const { file } = req;
   // empty file submitted
   if (!file) return next(new HttpException(400, 'Badge image file is required'));
@@ -41,4 +41,4 @@ const fileMiddleware = (req: Request | any, res: Response, next: NextFunction) =
     .catch(e => next(e));
 };
 
-export default fileMiddleware;
+export default fileUploadMiddleware;

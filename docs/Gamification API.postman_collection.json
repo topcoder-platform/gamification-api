@@ -274,6 +274,44 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Bulk Assign Badges from CSV",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "IV6OWrRiD/bulk.sample.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges/assign",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								"assign"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

@@ -2,8 +2,19 @@ import { config } from 'dotenv';
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
-export const { NODE_ENV, PORT, GAMIFICATION_DATABASE_URL, SECRET_KEY, LOG_FORMAT, LOG_DIR, ORIGIN, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } =
-  process.env;
+export const {
+  NODE_ENV,
+  PORT,
+  POSTGRE_SQL_USER,
+  POSTGRE_SQL_PASS,
+  POSTGRE_SQL_DATABASE,
+  SECRET_KEY,
+  LOG_FORMAT,
+  LOG_DIR,
+  ORIGIN,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+} = process.env;
 export const AUTH_SECRET = process.env.AUTH_SECRET || 'mysecret';
 export const VALID_ISSUERS =
   process.env.VALID_ISSUERS ||

@@ -1,8 +1,4 @@
 import type { Sequelize } from 'sequelize';
-import { SeederMeta as _SeederMeta } from './SeederMeta';
-import type { SeederMetaAttributes, SeederMetaCreationAttributes } from './SeederMeta';
-import { SequelizeMeta as _SequelizeMeta } from './SequelizeMeta';
-import type { SequelizeMetaAttributes, SequelizeMetaCreationAttributes } from './SequelizeMeta';
 import { badge_custom_fields as _badge_custom_fields } from './badge_custom_fields';
 import type { badge_custom_fieldsAttributes, badge_custom_fieldsCreationAttributes } from './badge_custom_fields';
 import { member_badges as _member_badges } from './member_badges';
@@ -22,8 +18,6 @@ import { tags as _tags } from './tags';
 import type { tagsAttributes, tagsCreationAttributes } from './tags';
 
 export {
-  _SeederMeta as SeederMeta,
-  _SequelizeMeta as SequelizeMeta,
   _badge_custom_fields as badge_custom_fields,
   _member_badges as member_badges,
   _organization as organization,
@@ -34,10 +28,6 @@ export {
 };
 
 export type {
-  SeederMetaAttributes,
-  SeederMetaCreationAttributes,
-  SequelizeMetaAttributes,
-  SequelizeMetaCreationAttributes,
   badge_custom_fieldsAttributes,
   badge_custom_fieldsCreationAttributes,
   member_badgesAttributes,
@@ -55,8 +45,6 @@ export type {
 };
 
 export function initModels(sequelize: Sequelize) {
-  const SeederMeta = _SeederMeta.initModel(sequelize);
-  const SequelizeMeta = _SequelizeMeta.initModel(sequelize);
   const badge_custom_fields = _badge_custom_fields.initModel(sequelize);
   const member_badges = _member_badges.initModel(sequelize);
   const organization = _organization.initModel(sequelize);
@@ -107,8 +95,6 @@ export function initModels(sequelize: Sequelize) {
   tags.hasMany(organization_badges_tags, { as: 'organization_badges_tags', foreignKey: 'tags_id' });
 
   return {
-    SeederMeta: SeederMeta,
-    SequelizeMeta: SequelizeMeta,
     badge_custom_fields: badge_custom_fields,
     member_badges: member_badges,
     organization: organization,

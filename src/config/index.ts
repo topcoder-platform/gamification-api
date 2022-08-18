@@ -1,5 +1,7 @@
 import { config } from 'dotenv';
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+config({ path: `.env23.${process.env.NODE_ENV || 'development'}.local` });
+
+console.log('process.env.POSTGRE_SQL_USER', process.env.POSTGRE_SQL_USER);
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
 export const {
@@ -10,10 +12,9 @@ export const {
   POSTGRE_SQL_DATABASE,
   SECRET_KEY,
   LOG_FORMAT,
-  LOG_DIR,
   ORIGIN,
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
+  // AWS_ACCESS_KEY_ID,
+  // AWS_SECRET_ACCESS_KEY,
 } = process.env;
 export const AUTH_SECRET = process.env.AUTH_SECRET || 'mysecret';
 export const VALID_ISSUERS =

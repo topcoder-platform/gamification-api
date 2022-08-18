@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '@exceptions/HttpException';
 import AWS from 'aws-sdk';
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME } from '@config';
+import { CDN_S3_BUCKET_NAME } from '@config';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME } from '@config';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 // config the AWS S3 environment
 const s3 = new AWS.S3({
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+  // accessKeyId: AWS_ACCESS_KEY_ID,
+  // secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
 const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunction) => {

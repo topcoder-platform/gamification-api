@@ -10,15 +10,16 @@ import {
 } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
+import { CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 import { parse } from 'csv-parse';
 import { has } from 'lodash';
 import { validate as uuidValidate } from 'uuid';
 
 // config the AWS S3 environment
 const s3 = new AWS.S3({
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+  // accessKeyId: AWS_ACCESS_KEY_ID,
+  // secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
 class BadgesController {

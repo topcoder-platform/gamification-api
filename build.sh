@@ -8,6 +8,7 @@ UPDATE_CACHE=""
 docker build -f Dockerfile \
    --target ${BUILDSTAGE}-build-stage \
    -t $APP_NAME:latest .
+docker create --name app $APP_NAME:latest
 
 if [ -d node_modules ]
 then

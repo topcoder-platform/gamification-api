@@ -12,7 +12,7 @@ export const {
   POSTGRE_SQL_DATABASE,
   SECRET_KEY,
   LOG_FORMAT,
-  ORIGIN,
+  ORIGIN
   // AWS_ACCESS_KEY_ID,
   // AWS_SECRET_ACCESS_KEY,
 } = process.env;

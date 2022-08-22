@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "9a121662-eff8-4a57-b7e2-400e24833815",
+		"name": "Gamification API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10740"
+	},
+	"item": [
+		{
+			"name": "Badges",
+			"item": [
+				{
+					"name": "Create New Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "6azdESKoO/Topcoder_Logo_200px.png"
+								},
+								{
+									"key": "organization_id",
+									"value": "{{ORG_ID}}",
+									"type": "text"
+								},
+								{
+									"key": "badge_status",
+									"value": "Active",
+									"type": "text"
+								},
+								{
+									"key": "badge_name",
+									"value": "TCO22 Development Finalist",
+									"type": "text"
+								},
+								{
+									"key": "badge_description",
+									"value": "The TCO22 Development Finalist badge is awarded to members officially recognized as finalists in the [TCO22 Development track](https://tco22.topcoder.com/competition/development?tracks[dev-tabs]=3&tracks[dev-tco22]=3).",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badges",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges?organization_id={{ORG_ID}}&limit=20",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges"
+							],
+							"query": [
+								{
+									"key": "organization_id",
+									"value": "{{ORG_ID}}"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "bc39b152-e0e3-4984-962b-f1eba67229dd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Member Badges",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/assigned/:member_id?tags=TCO,2022&tags_query_type=in",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								"assigned",
+								":member_id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "organization_id",
+									"value": "{{ORG_ID}}",
+									"disabled": true
+								},
+								{
+									"key": "tags",
+									"value": "TCO,2022"
+								},
+								{
+									"key": "tags_query_type",
+									"value": "in"
+								}
+							],
+							"variable": [
+								{
+									"key": "member_id",
+									"value": "88774619"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Badge to Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id/assign/:member_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id",
+								"assign",
+								":member_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "bc39b152-e0e3-4984-962b-f1eba67229dd"
+								},
+								{
+									"key": "member_id",
+									"value": "88774619"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign Badge from Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id/assign/:member_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id",
+								"assign",
+								":member_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "bc39b152-e0e3-4984-962b-f1eba67229dd"
+								},
+								{
+									"key": "member_id",
+									"value": "88774619"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Assign Badges from CSV",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "IV6OWrRiD/bulk.sample.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges/assign",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

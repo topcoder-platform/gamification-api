@@ -1,0 +1,518 @@
+swagger: '2.0'
+info:
+  version: V0.1.0
+  title: Topcoder Gamification API
+  description: >
+    API that provide access and interaction with gamification services on the Topcoder platform.
+
+
+    # Pagination
+
+
+    - Requests that return multiple items will be paginated to 20 items by
+    default.
+
+
+    - You can specify further pages with the `page` parameter (1 based).
+
+
+    - You can also set a custom page size up to 100 with the `perPage`
+    parameter.
+
+
+    # Roles
+
+    Each API endpoint has described minimal role to access. Only users with
+    specific roles can access those endpoints (where required). For insufficient
+    role 403 Forbidden HTTP response will be returned.
+
+
+    ## User roles:
+
+      + `Gamification Admin` - administrator of gamification ops
+
+    # Personally Identifiable Information
+
+    All endpoints that return member information must filter the response data
+    to exclude the personally identifiable information (properties from a
+    configurable array) unless the caller is a machine (M2M token), has
+    administrative privileges or is the member himself.
+    
+    
+    # Status codes:
+
+    The HTTP status codes to communicate with the API consumer.
+
+    + `200 OK` - Response to a successful GET, PUT, PATCH or DELETE.
+
+    + `201 Created` - When a resource is successfully created with POST.
+
+    + `400 Bad Request` - Malformed request; request body validation errors.
+
+    + `401 Unauthorized` - When no or invalid authentication details are
+    provided.
+
+    + `403 Forbidden` - User authenticated, but doesn't have access to the
+    resource.
+
+    + `404 Not Found` - When a non-existent resource is requested.
+
+    + `500 Server Error` - Something went wrong on the API end.
+    
+    
+    # Authorization:
+    
+    Authorization is when an entity proves a right to access.
+    
+    ## HTTP Authentication Schemes
+    
+    Bearer Authentication (also called token authentication) is an HTTP authentication scheme that involves security tokens called bearer tokens. We will be using Auth0 tokens that could be JWT or M2M
+    
+    
+    The client must send this token in the Authorization header when making requests to protected resources:
+    
+    
+    `Authorization: Bearer <token>`
+  
+    
+    ## Authorization via JWT tokens
+    
+    User based security tokens should be supported. Logic filtering of data should be achieved via the user based token and role. At least support for role admin vs user should be designed.
+    
+    
+    ## Important Note:
+    
+    + Tokens can be passed via headers.authorization / query.authToken, recommended way is to pass via headers.authorization.
+    
+    + While passing Authorize bearer token make sure to add `Bearer <token>`
+  license:
+    name: MIT
+    url: 'http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT'
+host: api.topcoder-dev.com
+basePath: /gamification
+schemes:
+  - https
+  - http
+securityDefinitions:
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  '/':
+    get:
+      tags:
+        - Health
+      description: Get API health status.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Health'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  '/badges':
+    post:
+      tags:
+        - Badges
+      description: Create new badge.
+      security:
+        - bearer: []
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The image file to upload.
+          required: true
+        - in: formData
+          name: organization_id
+          type: string
+          description: The id of the organization in which the badge should be created.
+          required: true
+        - in: formData
+          name: badge_status
+          type: string
+          description: The status to set to the new badge.
+          required: true
+        - in: formData
+          name: badge_name
+          type: string
+          description: The name.
+          required: true
+        - in: formData
+          name: badge_description
+          type: string
+          description: The description in text/markdown format.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Badge'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      tags:
+        - Badges
+      description: Get all badges in the system or partitioned by organization.
+      security:
+        - bearer: []
+      parameters:
+        - in: query
+          name: organization_id
+          type: string
+          description: The organization_id to filter results by.
+        - in: query
+          name: offset
+          type: string
+          description: The offset to use in the query.
+        - in: query
+          name: limit
+          type: string
+          description: The limit to use in the query.
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  '/badges/{badge_id}':
+    get:
+      tags:
+        - Badges
+      description: Get badge details and all members earned it.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge id.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BadgeWithOwners'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  '/badges/assigned/{member_id}':
+    get:
+      tags:
+        - Badges
+      description: Get badges earned by a member. Public endpoint.
+      parameters:
+        - in: path
+          name: member_id
+          type: string
+          description: The member user_id.
+          required: true
+        - in: query
+          name: organization_id
+          type: string
+          description: The organization_id to filter results by.
+        - in: query
+          name: tags
+          type: string
+          description: Filter results by comma-separated list of tags. For instance - TCO,2022,...
+        - in: query
+          name: tags_query_type
+          type: string
+          description: The type of opp to apply on tags. Defaults to 'all' if not set. See https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+        - in: query
+          name: offset
+          type: string
+          description: The offset to use in the query.
+        - in: query
+          name: limit
+          type: string
+          description: The limit to use in the query.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EarnedBadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  '/badges/{badge_id}/assign/{member_id}':
+    post:
+      tags:
+        - Badges
+      description: Assign a badge to a member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge to assign.
+          required: true
+        - in: path
+          name: member_id
+          type: string
+          description: The member.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Badge'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    delete:
+      tags:
+        - Badges
+      description: Unassign a badge from a member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge to unassign.
+          required: true
+        - in: path
+          name: member_id
+          type: string
+          description: The member.
+          required: true
+      responses:
+        '200':
+          description: OK. Returns 1 when badge was found and unassigned or 0 if nothing changed.
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  '/badges/assign':
+    post:
+      tags:
+        - Badges
+      description: Bulk assign badges to members from CSV file.
+      security:
+        - bearer: []
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The CSV file to upload and import.
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EarnedBadgesCollection'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  
+definitions:
+  Health:
+    type: string
+    default: 200
+  Badge:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The UUID of the badge.
+      organization_id:
+        type: string
+        description: The UUID of the organization this badge belongs to.
+      badge_status:
+        type: string
+        description: The current status of the badge.
+      badge_name:
+        type: string
+        description: The name of the badge.
+      badge_description:
+        type: string
+        description: The description in text/markdown format.
+      badge_image_url:
+        type: string
+        description: The URL of the badge image in the CDN S3 bucket.
+  BadgeWithOwners:
+    allOf:
+      - $ref: '#/definitions/Badge'
+      - type: object
+        properties:
+          member_badges:
+            type: array
+            items:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: The memeber id.
+                org_badge_id:
+                  type: string
+                  description: The UUID of the badge.
+                awarded_at:
+                  type: string
+                  description: The date the badge was assigned to the user.
+                awarded_by:
+                  type: string
+                  description: The handle or process awarded the badge.
+          tags_id_tags:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: tag id
+                tag_value:
+                  type: string
+                  description: tag value
+  BadgesCollection:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The total count of badges matching the query.
+        offset:
+          type: number
+          description: The offset used in the query.
+        limit:
+          type: number
+          description: The limit used in the query.
+        rows:
+          type: array
+          items:
+            $ref: '#/definitions/Badge'
+  EarnedBadgesCollection:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The total count of badges matching the query.
+        offset:
+          type: number
+          description: The offset used in the query.
+        limit:
+          type: number
+          description: The limit used in the query.
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                description: The memeber id.
+              org_badge_id:
+                type: string
+                description: The UUID of the badge.
+              awarded_at:
+                type: string
+                description: The date the badge was assigned to the user.
+              awarded_by:
+                type: string
+                description: The handle or process awarded the badge.
+              org_badge:
+                $ref: '#/definitions/Badge'
+  ErrorModel:
+    type: object
+    properties:
+      message:
+        type: string
+        description: the error message
+parameters:
+  page:
+    name: page
+    in: query
+    description: The page number.
+    required: false
+    type: integer
+    default: 1
+  perPage:
+    name: perPage
+    in: query
+    description: The number of items to list per page.
+    required: false
+    type: integer
+    default: 50
+    maximum: 100

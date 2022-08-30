@@ -14,6 +14,7 @@ export const {
   ORIGIN,
   // AWS_ACCESS_KEY_ID,
   // AWS_SECRET_ACCESS_KEY,
+  CDN_S3_BUCKET_NAME,
 } = process.env;
 export const AUTH_SECRET = process.env.AUTH_SECRET || 'mysecret';
 export const VALID_ISSUERS =
@@ -22,6 +23,5 @@ export const VALID_ISSUERS =
 export const API_BASE = '/v5/gamification';
 export const ADMIN_ACCESS_ROLES = ['Gamification Admin'];
 export const VALID_UPLOAD_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg', 'image/svg+xml'];
-export const CDN_S3_BUCKET_NAME = 'tc-gamification';
 export const DEFAULT_PAGE_LIMIT = 20;
 export const VALID_CSV_UPLOAD_TYPES = ['text/csv'];

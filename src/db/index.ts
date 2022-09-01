@@ -2,9 +2,8 @@ import { Sequelize } from 'sequelize';
 // https://github.com/sequelize/sequelize/issues/1774#issuecomment-126714889
 require('pg').defaults.parseInt8 = true;
 import { initModels } from './models/init-models';
-import { POSTGRE_SQL_USER, POSTGRE_SQL_PASS, POSTGRE_SQL_DATABASE } from '@config';
 
-const sequelize = new Sequelize(`postgres://${POSTGRE_SQL_USER}:${POSTGRE_SQL_PASS}@${POSTGRE_SQL_DATABASE}`, {
+const sequelize = new Sequelize(`postgres://${process.env.POSTGRE_SQL_USER}:${process.env.POSTGRE_SQL_PASS}@${process.env.POSTGRE_SQL_DATABASE}`, {
   logging: false,
   dialectOptions: {
     multipleStatements: true,

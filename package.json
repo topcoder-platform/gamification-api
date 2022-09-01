@@ -16,7 +16,10 @@
     "deploy:dev": "pm2 start ecosystem.config.js --only dev",
     "init-db": "node src/db/migrate up",
     "seed-db": "node src/db/seed up",
-    "sync-orm": "sequelize-auto -o ./src/db/models -d tc_gamification -h localhost -u postgres -p 5432 -x postgres -e postgres -l ts && npm run lint:fix"
+    "sync-orm": "sequelize-auto -o ./src/db/models -d tc_gamification -h localhost -u postgres -p 5432 -x postgres -e postgres -l ts && npm run lint:fix",
+    "new-migration": "node src/db/migrate create --name $1",
+    "migrate-up": "node src/db/migrate up",
+    "migrate-down": "node src/db/migrate down"
   },
   "dependencies": {
     "aws-sdk": "^2.1190.0",

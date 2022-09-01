@@ -4,13 +4,20 @@ API supporting the Gamification project at Topcoder.
 ## Quick Start
 Assuming you have PostgreSQL server running locally and the database `tc_gamification` exists. If this is not the case, either install PostgreSQL server or use the docker-compose provided. See "Docker support" section how to do that.
 
-When PostgreSQL server is ready, proceed with the commands below to get started.
+When PostgreSQL server is ready, proceed with the commands below to get started. Following steps require working db connection, take care to setup the URL properly and with correct credentials.
 
 1. `npm i`
-2. `export GAMIFICATION_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/tc_gamification` - following steps require working db connection, take care to setup the URL properly and with correct credentials.
+2. Setup local env vars - execute is terminal:
+
+```sh
+export POSTGRE_SQL_USER=<PG_USER>
+export POSTGRE_SQL_PASS=<PG_PASS>
+export POSTGRE_SQL_DATABASE=<HOST&DB_NAME>
+```
+
 3. `npm run init-db`
 4. `npm run seed-db` - optional step, assuming you want mock data for development.
-5. Set the local environment - we keep a sample file with all vars one needs to have set to be able to run the API locally. Check the `.env.development.local.sample`, fill it with proper values, and finally rename it to `.env.development.local`. Done, vars will be picked-up on server start.
+5. Set the local environment file - we keep a sample file with all vars one needs to have set to be able to run the API locally. Check the `.env.development.local.sample`, fill it with proper values, and finally rename it to `.env.development.local`. Done, vars will be picked-up on server start.
 6. `npm run dev`
 
 ## Docker support
@@ -23,16 +30,25 @@ We are writing migrations/seed in TypeScript. See `./src/db` folder for more det
 
 For detailed info how to write migrations in TypeScript with Umzug see its documentation: https://github.com/sequelize/umzug#migrations
 
-There is n example of our initial migration in the `src/db/migrations/2022.08.02T14.28.51.init-db.ts` file.
+There is an example of our initial migration in the `src/db/migrations/2022.08.02T14.28.51.init-db.ts` file.
 
 Here, what the migration does is:
 - Reads our SQL file with schema create statements and executes those via the `.query(...SQL)` [API from Sequelize](https://sequelize.org/docs/v6/core-concepts/raw-queries/).
 - the `down` migration would drop all tables in the daatabase and restore to initial state if executed.
 
+After completion it should look similar to:
+
+![](./docs/img/init-db.png)
+
 For seeds, check the initial seeder as example: `src/db/seeders/2022.08.02T15.25.48.init-mock-data.ts`
-- for `up` it creates data oin the tables
+- for `up` it creates data in the tables
 - for `down` truncates the tables
 
+After completion it should look similar to:
+
+![](./docs/img/seed-init.png)
+
+__Note:__ here you get the `ORG_ID` which is needed later for requests to the API.
 ### How to sync db models used by the Sequelize ORM with latest db structure?
 When changes/migrations affect the database schema structure the ORM models need to reflect and update accordingly. We use an automated approach to solve this need. There is a tool in npm, named [sequelize-auto](https://www.npmjs.com/package/sequelize-auto) which is installed as a dev dependency.
 

@@ -14,11 +14,12 @@ export interface organization_badgesAttributes {
   badge_name: string;
   badge_description?: string;
   badge_image_url: string;
+  active: boolean;
 }
 
 export type organization_badgesPk = 'id';
 export type organization_badgesId = organization_badges[organization_badgesPk];
-export type organization_badgesOptionalAttributes = 'badge_description';
+export type organization_badgesOptionalAttributes = 'badge_description' | 'active';
 export type organization_badgesCreationAttributes = Optional<organization_badgesAttributes, organization_badgesOptionalAttributes>;
 
 export class organization_badges
@@ -31,6 +32,7 @@ export class organization_badges
   badge_name!: string;
   badge_description?: string;
   badge_image_url!: string;
+  active!: boolean;
 
   // organization_badges belongsTo organization via organization_id
   organization!: organization;
@@ -147,6 +149,11 @@ export class organization_badges
         badge_image_url: {
           type: DataTypes.STRING,
           allowNull: false,
+        },
+        active: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
         },
       },
       {

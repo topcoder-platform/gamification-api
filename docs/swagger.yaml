@@ -152,6 +152,11 @@ paths:
           name: badge_description
           type: string
           description: The description in text/markdown format.
+        - in: formData
+          name: active
+          type: boolean
+          default: true
+          description: The badge active state. Defaults to active (true) if not set.
       responses:
         '200':
           description: OK
@@ -418,6 +423,9 @@ definitions:
       badge_image_url:
         type: string
         description: The URL of the badge image in the CDN S3 bucket.
+      active:
+        type: boolean
+        description: Badge active state.
   BadgeWithOwners:
     allOf:
       - $ref: '#/definitions/Badge'

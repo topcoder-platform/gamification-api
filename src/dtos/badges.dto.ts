@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString, IsIn } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString, IsIn, IsBooleanString } from 'class-validator';
 
 export class CreateBadgeDto {
   @IsString()
@@ -24,6 +24,10 @@ export class CreateBadgeDto {
 
   @IsString()
   public file_name: string;
+
+  @IsOptional()
+  @IsBooleanString()
+  public active: boolean;
 }
 
 export class ValidOrgIdDto {

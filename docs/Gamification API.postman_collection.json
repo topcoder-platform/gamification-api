@@ -44,13 +44,19 @@
 								},
 								{
 									"key": "badge_name",
-									"value": "TCO22 Development Finalist",
+									"value": "TCO22 Development Finalist 123",
 									"type": "text"
 								},
 								{
 									"key": "badge_description",
 									"value": "The TCO22 Development Finalist badge is awarded to members officially recognized as finalists in the [TCO22 Development track](https://tco22.topcoder.com/competition/development?tracks[dev-tabs]=3&tracks[dev-tco22]=3).",
 									"type": "text"
+								},
+								{
+									"key": "active",
+									"value": "false",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},

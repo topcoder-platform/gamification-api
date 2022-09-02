@@ -44,13 +44,19 @@
 								},
 								{
 									"key": "badge_name",
-									"value": "TCO22 Development Finalist",
+									"value": "TCO22 Development Finalist 123",
 									"type": "text"
 								},
 								{
 									"key": "badge_description",
 									"value": "The TCO22 Development Finalist badge is awarded to members officially recognized as finalists in the [TCO22 Development track](https://tco22.topcoder.com/competition/development?tracks[dev-tabs]=3&tracks[dev-tco22]=3).",
 									"type": "text"
+								},
+								{
+									"key": "active",
+									"value": "false",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -151,7 +157,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/badges/assigned/:member_id?tags=TCO,2022&tags_query_type=in",
+							"raw": "{{URL}}/badges/assigned/:member_id?organization_id={{ORG_ID}}&active_filter=all",
 							"host": [
 								"{{URL}}"
 							],
@@ -173,16 +179,21 @@
 								},
 								{
 									"key": "organization_id",
-									"value": "{{ORG_ID}}",
-									"disabled": true
+									"value": "{{ORG_ID}}"
 								},
 								{
 									"key": "tags",
-									"value": "TCO,2022"
+									"value": "TCO,2022",
+									"disabled": true
 								},
 								{
 									"key": "tags_query_type",
-									"value": "in"
+									"value": "in",
+									"disabled": true
+								},
+								{
+									"key": "active_filter",
+									"value": "all"
 								}
 							],
 							"variable": [

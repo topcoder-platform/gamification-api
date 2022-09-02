@@ -152,6 +152,11 @@ paths:
           name: badge_description
           type: string
           description: The description in text/markdown format.
+        - in: formData
+          name: active
+          type: boolean
+          default: true
+          description: The badge active state. Defaults to active (true) if not set.
       responses:
         '200':
           description: OK
@@ -262,6 +267,10 @@ paths:
           name: tags_query_type
           type: string
           description: The type of opp to apply on tags. Defaults to 'all' if not set. See https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+        - in: query
+          name: active_filter
+          type: string
+          description: Filter results by badge active field. By dafault, only active badges (active=true) are returned. To modify this use one of 'not_active' or 'all'.
         - in: query
           name: offset
           type: string
@@ -414,6 +423,9 @@ definitions:
       badge_image_url:
         type: string
         description: The URL of the badge image in the CDN S3 bucket.
+      active:
+        type: boolean
+        description: Badge active state.
   BadgeWithOwners:
     allOf:
       - $ref: '#/definitions/Badge'

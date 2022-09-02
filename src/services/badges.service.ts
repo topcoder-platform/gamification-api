@@ -93,6 +93,9 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
       // include badge meta
       model: DB.organization_badges,
       as: 'org_badge',
+      where: {
+        active: true, // return only active badges by default
+      },
       include: [
         {
           // include org meta
@@ -111,9 +114,7 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
   };
   // filter by organization
   if (query.organization_id) {
-    dbQuery.include.where = {
-      organization_id: query.organization_id,
-    };
+    dbQuery.include.where.organization_id = query.organization_id;
   }
   // filter by tags
   if (query.tags) {
@@ -123,6 +124,15 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
         [DB.Sequelize.Op[query.tags_query_type || 'all']]: query.tags.split(','),
       },
     };
+  }
+  // active filtering
+  if (query.active_filter) {
+    if (query.active_filter === 'all') {
+      delete dbQuery.include.where.active;
+    }
+    if (query.active_filter === 'not_active') {
+      dbQuery.include.where.active = false;
+    }
   }
 
   return DB.member_badges.findAndCountAll(dbQuery);

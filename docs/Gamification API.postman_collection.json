@@ -151,7 +151,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/badges/assigned/:member_id?tags=TCO,2022&tags_query_type=in",
+							"raw": "{{URL}}/badges/assigned/:member_id?organization_id={{ORG_ID}}&active_filter=all",
 							"host": [
 								"{{URL}}"
 							],
@@ -173,16 +173,21 @@
 								},
 								{
 									"key": "organization_id",
-									"value": "{{ORG_ID}}",
-									"disabled": true
+									"value": "{{ORG_ID}}"
 								},
 								{
 									"key": "tags",
-									"value": "TCO,2022"
+									"value": "TCO,2022",
+									"disabled": true
 								},
 								{
 									"key": "tags_query_type",
-									"value": "in"
+									"value": "in",
+									"disabled": true
+								},
+								{
+									"key": "active_filter",
+									"value": "all"
 								}
 							],
 							"variable": [

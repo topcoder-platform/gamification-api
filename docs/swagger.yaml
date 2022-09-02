@@ -263,6 +263,10 @@ paths:
           type: string
           description: The type of opp to apply on tags. Defaults to 'all' if not set. See https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
         - in: query
+          name: active_filter
+          type: string
+          description: Filter results by badge active field. By dafault, only active badges (active=true) are returned. To modify this use one of 'not_active' or 'all'.
+        - in: query
           name: offset
           type: string
           description: The offset to use in the query.

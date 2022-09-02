@@ -90,4 +90,9 @@ export class GetMemberBadgesQueryDto {
   @IsOptional()
   @IsNumberString()
   public offset: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['not_active', 'all'])
+  public active_filter: string;
 }

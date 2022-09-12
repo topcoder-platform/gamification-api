@@ -34,7 +34,9 @@ export async function getBadges(query: GetBadgesQueryDto) {
     ],
     offset: query.offset || 0,
     limit: query.limit || DEFAULT_PAGE_LIMIT,
-    order: ['badge_name', 'desc'], // order by badge name by default
+    order: [
+      ['badge_name', 'ASC'], // order by badge_name, default
+    ],
   };
   // filter by org_id if present
   if (query.organization_id) {
@@ -43,8 +45,8 @@ export async function getBadges(query: GetBadgesQueryDto) {
     };
   }
   // check for order params
-  if (query.order_by) {
-    dbQuery.order = [query.order_by, query.order_type || 'desc'];
+  if (query.order_by || query.order_type) {
+    dbQuery.order = [[query.order_by || 'badge_name', query.order_type || 'ASC']];
   }
 
   return DB.organization_badges.findAndCountAll(dbQuery);

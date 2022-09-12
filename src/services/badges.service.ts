@@ -34,12 +34,17 @@ export async function getBadges(query: GetBadgesQueryDto) {
     ],
     offset: query.offset || 0,
     limit: query.limit || DEFAULT_PAGE_LIMIT,
+    order: ['badge_name', 'desc'], // order by badge name by default
   };
   // filter by org_id if present
   if (query.organization_id) {
     dbQuery.where = {
       organization_id: query.organization_id,
     };
+  }
+  // check for order params
+  if (query.order_by) {
+    dbQuery.order = [query.order_by, query.order_type || 'desc'];
   }
 
   return DB.organization_badges.findAndCountAll(dbQuery);

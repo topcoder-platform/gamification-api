@@ -57,6 +57,16 @@ export class GetBadgesQueryDto {
   @IsOptional()
   @IsNumberString()
   public offset: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['badge_name'])
+  public order_by: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['asc', 'desc'])
+  public order_type: string;
 }
 
 export class AssignBadgeToMemberDto {

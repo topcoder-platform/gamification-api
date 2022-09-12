@@ -193,6 +193,14 @@ paths:
           name: limit
           type: string
           description: The limit to use in the query.
+        - in: query
+          name: order_by
+          type: string
+          description: The name of the field to order results by. Defaults to `badge_name` if not set.
+        - in: query
+          name: order_type
+          type: string
+          description: The order type/direction. Defaults to `asc` if not set.
       responses:
         '200':
           description: OK

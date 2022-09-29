@@ -18,7 +18,7 @@ export async function createBadge(badge: CreateBadgeDto) {
     }
   });
   if (exists) {
-    throw 'Badge with that name already exists in the organization.';
+    throw new Error('Badge with that name already exists in the organization.');
   }
 
   return DB.organization_badges.create({

@@ -11,6 +11,16 @@ import { getMemberInfoByHandle } from '@services/members.service';
  * @returns Promise
  */
 export async function createBadge(badge: CreateBadgeDto) {
+  const exists = await DB.organization_badges.findOne({
+    where: {
+      organization_id: badge.organization_id,
+      badge_name: badge.badge_name
+    }
+  });
+  if (exists) {
+    throw 'Badge with that name already exists in the organization.';
+  }
+
   return DB.organization_badges.create({
     id: uuidv4(),
     ...badge,

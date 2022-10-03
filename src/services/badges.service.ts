@@ -14,8 +14,8 @@ export async function createBadge(badge: CreateBadgeDto) {
   const exists = await DB.organization_badges.findOne({
     where: {
       organization_id: badge.organization_id,
-      badge_name: badge.badge_name
-    }
+      badge_name: badge.badge_name,
+    },
   });
   if (exists) {
     throw new Error('Badge with that name already exists in the organization.');
@@ -180,7 +180,15 @@ export async function getBadgeWithMembers(badge_id: string) {
     ],
   };
 
-  return DB.organization_badges.findOne(dbQuery);
+  const badge = await DB.organization_badges.findOne(dbQuery);
+
+  if (!badge) {
+    const e: any = new Error(`Badge ${badge_id} does not exists in the system.`);
+    e.status = 404;
+    throw e;
+  }
+
+  return badge;
 }
 
 // used to cache calls for finding user ids from tc_handles

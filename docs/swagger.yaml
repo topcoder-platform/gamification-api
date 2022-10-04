@@ -251,6 +251,54 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+    post:
+      tags:
+        - Badges
+      description: Update existing badge. Supports partial updates, one of the formData fields should be present.
+      security:
+        - bearer: []
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge id.
+          required: true
+        - in: formData
+          name: file
+          type: file
+          description: The image file to upload.
+        - in: formData
+          name: badge_name
+          type: string
+          description: The name.
+        - in: formData
+          name: badge_description
+          type: string
+          description: The description in text/markdown format.
+        - in: formData
+          name: active
+          type: boolean
+          default: true
+          description: The badge active state. Defaults to active (true) if not set.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Badge'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
 
   '/badges/assigned/{member_id}':
     get:

@@ -11,6 +11,16 @@ import { getMemberInfoByHandle } from '@services/members.service';
  * @returns Promise
  */
 export async function createBadge(badge: CreateBadgeDto) {
+  const exists = await DB.organization_badges.findOne({
+    where: {
+      organization_id: badge.organization_id,
+      badge_name: badge.badge_name,
+    },
+  });
+  if (exists) {
+    throw new Error('Badge with that name already exists in the organization.');
+  }
+
   return DB.organization_badges.create({
     id: uuidv4(),
     ...badge,
@@ -34,12 +44,19 @@ export async function getBadges(query: GetBadgesQueryDto) {
     ],
     offset: query.offset || 0,
     limit: query.limit || DEFAULT_PAGE_LIMIT,
+    order: [
+      ['badge_name', 'ASC'], // order by badge_name, default
+    ],
   };
   // filter by org_id if present
   if (query.organization_id) {
     dbQuery.where = {
       organization_id: query.organization_id,
     };
+  }
+  // check for order params
+  if (query.order_by || query.order_type) {
+    dbQuery.order = [[query.order_by || 'badge_name', query.order_type || 'ASC']];
   }
 
   return DB.organization_badges.findAndCountAll(dbQuery);
@@ -163,7 +180,15 @@ export async function getBadgeWithMembers(badge_id: string) {
     ],
   };
 
-  return DB.organization_badges.findOne(dbQuery);
+  const badge = await DB.organization_badges.findOne(dbQuery);
+
+  if (!badge) {
+    const e: any = new Error(`Badge ${badge_id} does not exists in the system.`);
+    e.status = 404;
+    throw e;
+  }
+
+  return badge;
 }
 
 // used to cache calls for finding user ids from tc_handles

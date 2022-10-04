@@ -88,7 +88,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/badges?organization_id={{ORG_ID}}&limit=20",
+							"raw": "{{URL}}/badges?organization_id={{ORG_ID}}",
 							"host": [
 								"{{URL}}"
 							],
@@ -102,11 +102,22 @@
 								},
 								{
 									"key": "limit",
-									"value": "20"
+									"value": "20",
+									"disabled": true
 								},
 								{
 									"key": "offset",
 									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "order_by",
+									"value": "badge_name",
+									"disabled": true
+								},
+								{
+									"key": "order_type",
+									"value": "desc",
 									"disabled": true
 								}
 							]
@@ -142,6 +153,69 @@
 								{
 									"key": "badge_id",
 									"value": "bc39b152-e0e3-4984-962b-f1eba67229dd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "badge_name",
+									"value": "TCO22 Development Finalist 123 UPDATED 2",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "badge_description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "fd416157-e471-4b20-977b-6e87f95f8120"
 								}
 							]
 						}

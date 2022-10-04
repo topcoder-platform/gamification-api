@@ -13,8 +13,9 @@ import AWS from 'aws-sdk';
 import { CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 import { parse } from 'csv-parse';
-import { has } from 'lodash';
-import { validate as uuidValidate } from 'uuid';
+import { has, isEmpty } from 'lodash';
+import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
+import path from 'path';
 
 // config the AWS S3 environment
 const s3 = new AWS.S3({
@@ -130,7 +131,9 @@ class BadgesController {
       next(error);
     }
   };
-
+  /**
+   * Bulk assign via CSV file
+   */
   public bulkAssignBadges = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
       const { file } = req;
@@ -170,6 +173,64 @@ class BadgesController {
           }
         },
       );
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+  /**
+   * Update existing badge
+   */
+  public modifyBadge = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { badge_id } = req.params;
+      const { file } = req;
+
+      if (isEmpty(req.body) && !file) {
+        throw new Error('Empty badge update request');
+      }
+
+      const badge = await getBadgeWithMembers(badge_id);
+
+      // badge image update request
+      // upload it to S3 and delete the older badge file
+      if (file) {
+        const fileID = uuidv4();
+        const ext = path.extname(file.originalname);
+        const fileName = `${badge.organization_id}/${fileID}${ext}`;
+        const s3Data = await s3
+          .upload({
+            Bucket: CDN_S3_BUCKET_NAME,
+            ACL: 'public-read',
+            Body: file.buffer,
+            Key: fileName,
+            ContentType: file.mimetype,
+            CacheControl: 'max-age=31536000',
+          })
+          .promise();
+        // delete the revious image file
+        const prevKey = badge.badge_image_url.split('/');
+        await s3
+          .deleteObject({
+            Bucket: CDN_S3_BUCKET_NAME,
+            Key: `${prevKey[prevKey.length - 2]}/${prevKey[prevKey.length - 1]}`,
+          })
+          .promise();
+        // new image file uplaoded to S3, update the badge
+        badge.set({
+          badge_image_url: s3Data.Location,
+        });
+      }
+
+      // set other updates coming with the body
+      if (!isEmpty(req.body)) {
+        badge.set(req.body);
+      }
+
+      // save all updates
+      await badge.save();
+
+      res.json(badge);
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

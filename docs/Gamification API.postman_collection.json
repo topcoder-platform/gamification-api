@@ -160,6 +160,69 @@
 					"response": []
 				},
 				{
+					"name": "Update Badge",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "badge_name",
+									"value": "TCO22 Development Finalist 123 UPDATED 2",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "badge_description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id"
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "fd416157-e471-4b20-977b-6e87f95f8120"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Member Badges",
 					"request": {
 						"auth": {

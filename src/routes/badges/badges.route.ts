@@ -13,6 +13,7 @@ import {
   VallidMemberIdDto,
   GetMemberBadgesQueryDto,
   ValidBadgeIdDto,
+  ModifyBadgeDto,
 } from '@/dtos/badges.dto';
 import multer from 'multer';
 import fileUploadMiddleware from '@/middlewares/fileUpload.middleware';
@@ -124,6 +125,15 @@ class BadgesRoute implements Routes {
       rolesMiddleware(ADMIN_ACCESS_ROLES),
       uploadCSV.single('file'),
       this.badgesController.bulkAssignBadges,
+    );
+    // PATCH a badge
+    this.router.post(
+      `${this.path}/:badge_id`,
+      authMiddleware,
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
+      upload.single('file'),
+      validationMiddleware(ModifyBadgeDto, 'body'),
+      this.badgesController.modifyBadge,
     );
   }
 }

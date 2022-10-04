@@ -1,11 +1,32 @@
 import { IsString, IsNotEmpty, IsUUID, IsUrl, IsOptional, IsNumberString, IsIn, IsBooleanString } from 'class-validator';
 
+export class ModifyBadgeDto {
+  // TODO: convert to enum of possible statuses and enable when status updates should be supported
+  // @IsOptional()
+  // @IsString()
+  // @IsNotEmpty()
+  // public badge_status?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public badge_name?: string;
+
+  @IsOptional()
+  @IsString()
+  public badge_description?: string;
+
+  @IsOptional()
+  @IsBooleanString()
+  public active?: boolean;
+}
 export class CreateBadgeDto {
   @IsString()
   @IsNotEmpty()
   @IsUUID()
   public organization_id: string;
 
+  // TODO: convert to enum of possible statuses
   @IsString()
   @IsNotEmpty()
   public badge_status: string;

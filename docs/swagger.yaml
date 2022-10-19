@@ -225,7 +225,7 @@ paths:
     get:
       tags:
         - Badges
-      description: Get badge details and all members earned it.
+      description: Get badge details and recent 20 members that have been assigned with it.
       security:
         - bearer: []
       parameters:
@@ -287,6 +287,53 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Badge'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  '/badges/{badge_id}/assignees':
+    get:
+      tags:
+        - Badges
+      description: Get badge assignees.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: badge_id
+          type: string
+          description: The badge id.
+          required: true
+        - in: query
+          name: offset
+          type: string
+          description: The offset to use in the query.
+        - in: query
+          name: limit
+          type: string
+          description: The limit to use in the query.
+        - in: query
+          name: order_by
+          type: string
+          description: The name of the field to order results by. Defaults to `user_handle` if not set.
+        - in: query
+          name: order_type
+          type: string
+          description: The order type/direction. Defaults to `asc` if not set.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BadgeAssigneesCollection'
         '400':
           description: Bad request
           schema:
@@ -562,6 +609,38 @@ definitions:
                 description: The handle or process awarded the badge.
               org_badge:
                 $ref: '#/definitions/Badge'
+  BadgeAssigneesCollection:
+      type: object
+      properties:
+        count:
+          type: number
+          description: The total count.
+        offset:
+          type: number
+          description: The offset used in the query.
+        limit:
+          type: number
+          description: The limit used in the query.
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                description: The memeber id.
+              org_badge_id:
+                type: string
+                description: The UUID of the badge.
+              awarded_at:
+                type: string
+                description: The date the badge was assigned to the user.
+              awarded_by:
+                type: string
+                description: The handle or process awarded the badge.
+              user_handle:
+                type: string
+                description: The memeber handle.
   ErrorModel:
     type: object
     properties:

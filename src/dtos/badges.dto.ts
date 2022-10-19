@@ -131,3 +131,23 @@ export class GetMemberBadgesQueryDto {
   @IsIn(['not_active', 'all'])
   public active_filter: string;
 }
+
+export class GetBadgesAssigneesQueryDto {
+  @IsOptional()
+  @IsNumberString()
+  public limit: string;
+
+  @IsOptional()
+  @IsNumberString()
+  public offset: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['user_handle', 'awarded_at'])
+  public order_by: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['asc', 'desc'])
+  public order_type: string;
+}

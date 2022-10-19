@@ -160,6 +160,63 @@
 					"response": []
 				},
 				{
+					"name": "Get Badge Assignees",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/badges/:badge_id/assignees",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"badges",
+								":badge_id",
+								"assignees"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "order_by",
+									"value": "awarded_at",
+									"disabled": true
+								},
+								{
+									"key": "order_type",
+									"value": "desc",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "badge_id",
+									"value": "c82f8785-6ea5-4b8a-97aa-72052032ea08"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update Badge",
 					"request": {
 						"auth": {

@@ -14,6 +14,7 @@ import {
   GetMemberBadgesQueryDto,
   ValidBadgeIdDto,
   ModifyBadgeDto,
+  GetBadgesAssigneesQueryDto,
 } from '@/dtos/badges.dto';
 import multer from 'multer';
 import fileUploadMiddleware from '@/middlewares/fileUpload.middleware';
@@ -134,6 +135,15 @@ class BadgesRoute implements Routes {
       upload.single('file'),
       validationMiddleware(ModifyBadgeDto, 'body'),
       this.badgesController.modifyBadge,
+    );
+    // Get badge assignees
+    this.router.get(
+      `${this.path}/:badge_id/assignees`,
+      authMiddleware,
+      rolesMiddleware(ADMIN_ACCESS_ROLES),
+      validationMiddleware(ValidBadgeIdDto, 'params'),
+      validationMiddleware(GetBadgesAssigneesQueryDto, 'query'),
+      this.badgesController.getBadgeAssignees,
     );
   }
 }

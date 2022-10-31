@@ -128,6 +128,9 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
     },
     offset: query.offset || 0,
     limit: query.limit || DEFAULT_PAGE_LIMIT,
+    order: [
+      ['awarded_at', 'DESC'], // order by awarded_at, default
+    ],
   };
   // filter by organization
   if (query.organization_id) {

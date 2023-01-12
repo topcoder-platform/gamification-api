@@ -1,5 +1,5 @@
 import DB from '@/db';
-import { CreateBadgeDto, GetBadgesQueryDto, GetMemberBadgesQueryDto } from '@/dtos/badges.dto';
+import { CreateBadgeDto, GetBadgesAssigneesQueryDto, GetBadgesQueryDto, GetMemberBadgesQueryDto } from '@/dtos/badges.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_PAGE_LIMIT } from '@config';
 import { has } from 'lodash';
@@ -128,6 +128,9 @@ export async function getMemberEarnedBadges(member_id: string, query: GetMemberB
     },
     offset: query.offset || 0,
     limit: query.limit || DEFAULT_PAGE_LIMIT,
+    order: [
+      ['awarded_at', 'DESC'], // order by awarded_at, default
+    ],
   };
   // filter by organization
   if (query.organization_id) {
@@ -171,6 +174,11 @@ export async function getBadgeWithMembers(badge_id: string) {
         // include members earned the badge
         model: DB.member_badges,
         as: 'member_badges',
+        // TODO: pagination support with sorting via query
+        limit: DEFAULT_PAGE_LIMIT,
+        order: [
+          ['awarded_at', 'DESC'], // order by awarded_at, default
+        ],
       },
       {
         // include badge tags
@@ -228,4 +236,24 @@ export async function bulkAssignBadges(records: [{ user_handle: string; org_badg
   // store in db
   console.log('bulk create', bulkRecords);
   return DB.member_badges.bulkCreate(bulkRecords);
+}
+
+export async function getBadgeMemberAssignees(badge_id: string, query: GetBadgesAssigneesQueryDto) {
+  // default query
+  const dbQuery: any = {
+    where: {
+      org_badge_id: badge_id,
+    },
+    offset: query.offset || 0,
+    limit: query.limit || DEFAULT_PAGE_LIMIT,
+    order: [
+      ['user_handle', 'ASC'], // order by user_handle, default
+    ],
+  };
+  // check for order params
+  if (query.order_by || query.order_type) {
+    dbQuery.order = [[query.order_by || 'user_handle', query.order_type || 'ASC']];
+  }
+
+  return DB.member_badges.findAndCountAll(dbQuery);
 }

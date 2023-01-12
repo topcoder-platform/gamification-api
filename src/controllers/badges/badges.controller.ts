@@ -7,6 +7,7 @@ import {
   getMemberEarnedBadges,
   getBadgeWithMembers,
   bulkAssignBadges,
+  getBadgeMemberAssignees,
 } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
@@ -231,6 +232,26 @@ class BadgesController {
       await badge.save();
 
       res.json(badge);
+    } catch (error) {
+      if (!error.status) error.status = 400;
+      next(error);
+    }
+  };
+  /**
+   * Get badge winners/assignees
+   */
+  public getBadgeAssignees = async (req: Request | any, res: Response, next: NextFunction) => {
+    try {
+      const { badge_id } = req.params;
+      const { offset, limit } = req.query;
+      const { count, rows } = await getBadgeMemberAssignees(badge_id, req.query);
+
+      res.json({
+        count,
+        offset: Number(offset || 0),
+        limit: Number(limit || DEFAULT_PAGE_LIMIT),
+        rows,
+      });
     } catch (error) {
       if (!error.status) error.status = 400;
       next(error);

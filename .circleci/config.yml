@@ -50,6 +50,16 @@ jobs:
       BUILDSTAGE: "development"    
     steps: *builddeploy_steps
 
+  # Build & Deploy against development backend
+  "build-qa":
+    <<: *defaults
+    environment:
+      DEPLOY_ENV: "QA"
+      LOGICAL_ENV: "qa"
+      APPNAME: "tc-gamification"
+      BUILDSTAGE: "development"    
+    steps: *builddeploy_steps
+
   "build-prod":
     <<: *defaults
     environment:
@@ -69,6 +79,13 @@ workflows:
           filters:
             branches:
               only: develop
+
+      # Development builds are executed on "develop" branch only.
+      - "build-qa":
+          context : org-global
+          filters:
+            branches:
+              only: qa
 
       # Production builds are exectuted only on tagged commits to the
       # master branch.

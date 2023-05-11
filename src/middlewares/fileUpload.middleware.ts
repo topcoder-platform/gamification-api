@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '@exceptions/HttpException';
 import AWS from 'aws-sdk';
-import { CDN_S3_BUCKET_NAME } from '@config';
+import { CDN_S3_BUCKET_NAME, CDN_DOMAIN } from '@config';
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME } from '@config';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -33,7 +33,7 @@ const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunct
     .then(s3Data => {
       // set the url in the body for further ops
       // and continue...
-      req.body.badge_image_url = s3Data.Location;
+      req.body.badge_image_url = `${CDN_DOMAIN}/${fileName}`;
       req.body.file_name = fileName;
       // all good, continue...
       next();

@@ -23,7 +23,6 @@ const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunct
   const fileName = `${req.body.organization_id}/${fileID}${ext}`;
   s3.upload({
     Bucket: CDN_S3_BUCKET_NAME,
-    ACL: 'public-read',
     Body: file.buffer,
     Key: fileName,
     ContentType: file.mimetype,

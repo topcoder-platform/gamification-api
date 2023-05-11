@@ -30,7 +30,7 @@ const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunct
     Tagging: 'UPLOAD=TEMP',
   })
     .promise()
-    .then(s3Data => {
+    .then(() => {
       // set the url in the body for further ops
       // and continue...
       req.body.badge_image_url = `${CDN_DOMAIN}/${fileName}`;

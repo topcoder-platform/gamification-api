@@ -202,7 +202,6 @@ class BadgesController {
         await s3
           .upload({
             Bucket: CDN_S3_BUCKET_NAME,
-            ACL: 'public-read',
             Body: file.buffer,
             Key: fileName,
             ContentType: file.mimetype,

@@ -11,7 +11,7 @@ import {
 } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
 import AWS from 'aws-sdk';
-import { CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
+import { CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT, CDN_DOMAIN } from '@config';
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 import { parse } from 'csv-parse';
 import { has, isEmpty } from 'lodash';
@@ -218,7 +218,7 @@ class BadgesController {
           .promise();
         // new image file uplaoded to S3, update the badge
         badge.set({
-          badge_image_url: s3Data.Location,
+          badge_image_url: `${CDN_DOMAIN}/${fileName}`,
         });
       }
 

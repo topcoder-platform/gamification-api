@@ -199,7 +199,7 @@ class BadgesController {
         const fileID = uuidv4();
         const ext = path.extname(file.originalname);
         const fileName = `${badge.organization_id}/${fileID}${ext}`;
-        await s3
+        const s3Data = await s3
           .upload({
             Bucket: CDN_S3_BUCKET_NAME,
             Body: file.buffer,

@@ -15,6 +15,7 @@ export const {
   // AWS_ACCESS_KEY_ID,
   // AWS_SECRET_ACCESS_KEY,
   CDN_S3_BUCKET_NAME,
+  CDN_DOMAIN,
 } = process.env;
 export const AUTH_SECRET = process.env.AUTH_SECRET || 'mysecret';
 export const VALID_ISSUERS =

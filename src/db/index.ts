@@ -7,7 +7,10 @@ const sequelize = new Sequelize(`postgres://${process.env.POSTGRE_SQL_USER}:${pr
   logging: false,
   dialectOptions: {
     multipleStatements: true,
+    prependSearchPath: true,
   },
+  schema: process.env.POSTGRE_SQL_SCHEMA,
+  searchPath: process.env.POSTGRE_SQL_SCHEMA
 });
 
 // Put models here when needed...

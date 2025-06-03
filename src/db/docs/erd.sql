@@ -3,7 +3,7 @@
 BEGIN;
 
 
-CREATE TABLE IF NOT EXISTS public.badge_custom_fields
+CREATE TABLE IF NOT EXISTS gamification.badge_custom_fields
 (
     organization_id uuid NOT NULL,
     field_def_id uuid NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.badge_custom_fields
     CONSTRAINT unique_defs UNIQUE (organization_id, field_def_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.member_badges
+CREATE TABLE IF NOT EXISTS gamification.member_badges
 (
     user_id bigint NOT NULL,
     org_badge_id uuid NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.member_badges
     CONSTRAINT badge_per_user PRIMARY KEY (user_id, org_badge_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.organization
+CREATE TABLE IF NOT EXISTS gamification.organization
 (
     id uuid NOT NULL,
     name character varying COLLATE pg_catalog."default" NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.organization
     CONSTRAINT org_name UNIQUE (name)
 );
 
-CREATE TABLE IF NOT EXISTS public.organization_badges
+CREATE TABLE IF NOT EXISTS gamification.organization_badges
 (
     id uuid NOT NULL,
     organization_id uuid NOT NULL,
@@ -47,21 +47,21 @@ CREATE TABLE IF NOT EXISTS public.organization_badges
     CONSTRAINT org_badge_unique_key UNIQUE (id, organization_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.organization_badges_custom_fields
+CREATE TABLE IF NOT EXISTS gamification.organization_badges_custom_fields
 (
     custom_field_id uuid NOT NULL,
     badges_id uuid NOT NULL,
     CONSTRAINT organization_badges_custom_fields_pkey PRIMARY KEY (badges_id, custom_field_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.organization_badges_tags
+CREATE TABLE IF NOT EXISTS gamification.organization_badges_tags
 (
     tags_id uuid NOT NULL,
     organization_badges_id uuid NOT NULL,
     CONSTRAINT organization_badges_tags_pkey PRIMARY KEY (organization_badges_id, tags_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.tags
+CREATE TABLE IF NOT EXISTS gamification.tags
 (
     id uuid NOT NULL,
     organization_id uuid NOT NULL,
@@ -71,65 +71,65 @@ CREATE TABLE IF NOT EXISTS public.tags
     CONSTRAINT tags_unique_key UNIQUE (id, organization_id)
 );
 
-ALTER TABLE IF EXISTS public.badge_custom_fields
+ALTER TABLE IF EXISTS gamification.badge_custom_fields
     ADD CONSTRAINT badge_custom_fields_organization_id_fkey FOREIGN KEY (organization_id)
-    REFERENCES public.organization (id) MATCH SIMPLE
+    REFERENCES gamification.organization (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.member_badges
+ALTER TABLE IF EXISTS gamification.member_badges
     ADD CONSTRAINT member_badges_org_badge_id_fkey FOREIGN KEY (org_badge_id)
-    REFERENCES public.organization_badges (id) MATCH SIMPLE
+    REFERENCES gamification.organization_badges (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges
+ALTER TABLE IF EXISTS gamification.organization_badges
     ADD CONSTRAINT organization_badges_organization_id_fkey FOREIGN KEY (organization_id)
-    REFERENCES public.organization (id) MATCH SIMPLE
+    REFERENCES gamification.organization (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges_custom_fields
+ALTER TABLE IF EXISTS gamification.organization_badges_custom_fields
     ADD CONSTRAINT organization_badges_custom_fields_badges_id_fkey FOREIGN KEY (badges_id)
-    REFERENCES public.organization_badges (id) MATCH SIMPLE
+    REFERENCES gamification.organization_badges (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges_custom_fields
+ALTER TABLE IF EXISTS gamification.organization_badges_custom_fields
     ADD CONSTRAINT organization_badges_custom_fields_custom_field_id_fkey FOREIGN KEY (custom_field_id)
-    REFERENCES public.badge_custom_fields (field_def_id) MATCH SIMPLE
+    REFERENCES gamification.badge_custom_fields (field_def_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges_tags
+ALTER TABLE IF EXISTS gamification.organization_badges_tags
     ADD CONSTRAINT organization_badges_tags_organization_badges_id_fkey FOREIGN KEY (organization_badges_id)
-    REFERENCES public.organization_badges (id) MATCH SIMPLE
+    REFERENCES gamification.organization_badges (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.organization_badges_tags
+ALTER TABLE IF EXISTS gamification.organization_badges_tags
     ADD CONSTRAINT organization_badges_tags_tags_id_fkey FOREIGN KEY (tags_id)
-    REFERENCES public.tags (id) MATCH SIMPLE
+    REFERENCES gamification.tags (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.tags
+ALTER TABLE IF EXISTS gamification.tags
     ADD CONSTRAINT tags_organization_id_fkey FOREIGN KEY (organization_id)
-    REFERENCES public.organization (id) MATCH SIMPLE
+    REFERENCES gamification.organization (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

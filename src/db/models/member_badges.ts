@@ -60,7 +60,7 @@ export class member_badges extends Model<member_badgesAttributes, member_badgesC
       {
         sequelize,
         tableName: 'member_badges',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

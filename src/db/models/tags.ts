@@ -76,7 +76,7 @@ export class tags extends Model<tagsAttributes, tagsCreationAttributes> implemen
       {
         sequelize,
         tableName: 'tags',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

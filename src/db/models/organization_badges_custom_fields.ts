@@ -55,7 +55,7 @@ export class organization_badges_custom_fields
       {
         sequelize,
         tableName: 'organization_badges_custom_fields',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

@@ -23,7 +23,7 @@ export const VALID_ISSUERS =
   process.env.VALID_ISSUERS ||
   '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com/", "https://auth.topcoder-dev.com/","https://topcoder.auth0.com/","https://auth.topcoder.com/"]';
 export const API_BASE = '/v5/gamification';
-export const ADMIN_ACCESS_ROLES = ['Gamification Admin'];
+export const ADMIN_ACCESS_ROLES = ['administrator'];
 export const VALID_UPLOAD_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg', 'image/svg+xml'];
 export const DEFAULT_PAGE_LIMIT = 20;
 export const VALID_CSV_UPLOAD_TYPES = ['text/csv'];

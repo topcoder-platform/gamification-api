@@ -6,5 +6,5 @@ export const up: MigrationFn = async ({ context: queryInterface }: any) => {
 };
 
 export const down: MigrationFn = async ({ context: queryInterface }: any) => {
-  await queryInterface.query('ALTER TABLE IF EXISTS ${process.env.POSTGRE_SQL_SCHEMA}.organization_badges DROP COLUMN IF EXISTS active;');
+  await queryInterface.query(`ALTER TABLE IF EXISTS ${process.env.POSTGRE_SQL_SCHEMA}.organization_badges DROP COLUMN IF EXISTS active;`);
 };

@@ -55,7 +55,7 @@ export class organization_badges_tags
       {
         sequelize,
         tableName: 'organization_badges_tags',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

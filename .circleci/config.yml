@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
     docker:
-      - image: cimg/python:3.11.7-browsers
+      - image: cimg/node:18.20.4
 install_dependency: &install_dependency
   name: Installation of build and deployment dependencies.
   command: |
@@ -68,7 +68,7 @@ workflows:
           context : org-global
           filters:
             branches:
-              only: develop
+              only: [develop, db_schema]
 
       # Production builds are exectuted only on tagged commits to the
       # master branch.

@@ -71,7 +71,7 @@ export class organization extends Model<organizationAttributes, organizationCrea
       {
         sequelize,
         tableName: 'organization',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

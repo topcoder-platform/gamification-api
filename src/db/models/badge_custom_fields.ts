@@ -113,7 +113,7 @@ export class badge_custom_fields
       {
         sequelize,
         tableName: 'badge_custom_fields',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

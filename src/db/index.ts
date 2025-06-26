@@ -3,11 +3,14 @@ import { Sequelize } from 'sequelize';
 require('pg').defaults.parseInt8 = true;
 import { initModels } from './models/init-models';
 
-const sequelize = new Sequelize(`postgres://${process.env.POSTGRE_SQL_USER}:${process.env.POSTGRE_SQL_PASS}@${process.env.POSTGRE_SQL_DATABASE}`, {
+const sequelize = new Sequelize(`postgres://${process.env.POSTGRE_SQL_USER}:${process.env.POSTGRE_SQL_PASS}@${process.env.POSTGRE_SQL_DATABASE}?schema=${process.env.POSTGRE_SQL_SCHEMA}`, {
   logging: false,
   dialectOptions: {
     multipleStatements: true,
+    prependSearchPath: true,
   },
+  schema: process.env.POSTGRE_SQL_SCHEMA,
+  searchPath: process.env.POSTGRE_SQL_SCHEMA
 });
 
 // Put models here when needed...

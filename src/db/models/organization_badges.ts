@@ -159,7 +159,7 @@ export class organization_badges
       {
         sequelize,
         tableName: 'organization_badges',
-        schema: 'public',
+        schema: process.env.POSTGRE_SQL_SCHEMA,
         timestamps: false,
         indexes: [
           {

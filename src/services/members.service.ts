@@ -9,7 +9,7 @@ import { isEmpty } from 'lodash';
  */
 export async function getMemberInfo(member_id: string) {
   return axios
-    .get(`https://api.topcoder${NODE_ENV === 'development' ? '-dev' : ''}.com/v5/members?userId=${member_id}`)
+    .get(`https://api.topcoder${NODE_ENV === 'development' ? '-dev' : ''}.com/v6/members?userId=${member_id}`)
     .then(res => (isEmpty(res.data) ? null : res.data[0]));
 }
 
@@ -19,5 +19,5 @@ export async function getMemberInfo(member_id: string) {
  * @returns Promise
  */
 export async function getMemberInfoByHandle(handle: string) {
-  return axios.get(`https://api.topcoder${NODE_ENV === 'development' ? '-dev' : ''}.com/v5/members/${handle}`).then(res => res.data);
+  return axios.get(`https://api.topcoder${NODE_ENV === 'development' ? '-dev' : ''}.com/v6/members/${handle}`).then(res => res.data);
 }

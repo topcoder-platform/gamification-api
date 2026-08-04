@@ -1,18 +1,22 @@
-# compiled output
+.git
+.gitignore
+.circleci
 .vscode
-/node_modules
+.env*
+node_modules
+dist
+coverage
+logs
+docs
+test
+*.log
 
-# code formatter
-.eslintrc
-.eslintignore
 .editorconfig
+.eslintignore
+.eslintrc
 .huskyrc
 .lintstagedrc.json
 .prettierrc
-
-# test
-jest.config.js
-
-# docker
 Dockerfile
 docker-compose.yml
+jest.config.js

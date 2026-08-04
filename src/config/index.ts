@@ -18,7 +18,7 @@ export const {
   CDN_S3_BUCKET_NAME,
   CDN_DOMAIN,
 } = process.env;
-export const AUTH_SECRET = process.env.AUTH_SECRET || 'mysecret';
+export const AUTH_SECRET = process.env.AUTH_SECRET;
 export const VALID_ISSUERS =
   process.env.VALID_ISSUERS ||
   '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com/", "https://auth.topcoder-dev.com/","https://topcoder.auth0.com/","https://auth.topcoder.com/"]';

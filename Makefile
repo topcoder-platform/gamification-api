@@ -9,7 +9,7 @@ APP_NAME := $(APP_NAME)
 # Build the container image - Dvelopment
 build-dev:
 	docker build -t ${APP_NAME}\
-		--target development-build-stage\
+		--target local-development-build-stage\
 		-f Dockerfile .
 
 # Build the container image - Production

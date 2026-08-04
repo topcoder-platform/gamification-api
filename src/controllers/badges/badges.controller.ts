@@ -10,19 +10,15 @@ import {
   getBadgeMemberAssignees,
 } from '@services/badges.service';
 import { getMemberInfo } from '@services/members.service';
-import AWS from 'aws-sdk';
+import { DeleteObjectCommand, DeleteObjectTaggingCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT, CDN_DOMAIN } from '@config';
-// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME, DEFAULT_PAGE_LIMIT } from '@config';
 import { parse } from 'csv-parse';
-import { has, isEmpty } from 'lodash';
-import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
+import { isUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
+import { isEmpty } from '@utils/util';
 import path from 'path';
 
-// config the AWS S3 environment
-const s3 = new AWS.S3({
-  // accessKeyId: AWS_ACCESS_KEY_ID,
-  // secretAccessKey: AWS_SECRET_ACCESS_KEY,
-});
+const s3 = new S3Client({});
 
 class BadgesController {
   /**
@@ -33,12 +29,12 @@ class BadgesController {
       const newBadge = await createBadge(req.body);
       // all set in db, delete the TEMP tag from image file
       // there is Lifecycle rule configured wich will clean up all TEMP uploads after 1 day
-      await s3
-        .deleteObjectTagging({
+      await s3.send(
+        new DeleteObjectTaggingCommand({
           Bucket: CDN_S3_BUCKET_NAME,
           Key: req.body.file_name,
-        })
-        .promise();
+        }),
+      );
 
       res.json(newBadge);
     } catch (error) {
@@ -154,9 +150,9 @@ class BadgesController {
           try {
             const assignments = await bulkAssignBadges(
               records.map((r: { tc_handle: any; badge_id: string; awarded_at: string | number | Date; awarded_by: any }) => {
-                if (!has(r, 'tc_handle') || !has(r, 'badge_id'))
+                if (!Object.prototype.hasOwnProperty.call(r, 'tc_handle') || !Object.prototype.hasOwnProperty.call(r, 'badge_id'))
                   throw new Error('CSV has invalid structure, tc_handle & badge_id are required fields');
-                if (!uuidValidate(r.badge_id)) throw new Error('CSV has invalid structure, badge_id has to be UUIDs');
+                if (!isUUID(r.badge_id)) throw new Error('CSV has invalid structure, badge_id has to be UUIDs');
                 // map to db fields
                 return {
                   user_handle: r.tc_handle,
@@ -196,26 +192,26 @@ class BadgesController {
       // badge image update request
       // upload it to S3 and delete the older badge file
       if (file) {
-        const fileID = uuidv4();
+        const fileID = randomUUID();
         const ext = path.extname(file.originalname);
         const fileName = `${badge.organization_id}/${fileID}${ext}`;
-        const s3Data = await s3
-          .upload({
+        await s3.send(
+          new PutObjectCommand({
             Bucket: CDN_S3_BUCKET_NAME,
             Body: file.buffer,
             Key: fileName,
             ContentType: file.mimetype,
             CacheControl: 'max-age=31536000',
-          })
-          .promise();
+          }),
+        );
         // delete the revious image file
         const prevKey = badge.badge_image_url.split('/');
-        await s3
-          .deleteObject({
+        await s3.send(
+          new DeleteObjectCommand({
             Bucket: CDN_S3_BUCKET_NAME,
             Key: `${prevKey[prevKey.length - 2]}/${prevKey[prevKey.length - 1]}`,
-          })
-          .promise();
+          }),
+        );
         // new image file uplaoded to S3, update the badge
         badge.set({
           badge_image_url: `${CDN_DOMAIN}/${fileName}`,

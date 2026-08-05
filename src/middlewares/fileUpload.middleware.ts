@@ -1,16 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '@exceptions/HttpException';
-import AWS from 'aws-sdk';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { CDN_S3_BUCKET_NAME, CDN_DOMAIN } from '@config';
-// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CDN_S3_BUCKET_NAME } from '@config';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
-// config the AWS S3 environment
-const s3 = new AWS.S3({
-  // accessKeyId: AWS_ACCESS_KEY_ID,
-  // secretAccessKey: AWS_SECRET_ACCESS_KEY,
-});
+const s3 = new S3Client({});
 
 const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunction) => {
   const { file } = req;
@@ -18,18 +13,19 @@ const fileUploadMiddleware = (req: Request | any, res: Response, next: NextFunct
   if (!file) return next(new HttpException(400, 'Badge image file is required'));
   // upload it to S3 and set it with `UPLOAD:TEMP` tag
   // there is Lifecycle rule configured wich will clean up all TEMP uploads after 1 day
-  const fileID = uuidv4();
+  const fileID = randomUUID();
   const ext = path.extname(file.originalname);
   const fileName = `${req.body.organization_id}/${fileID}${ext}`;
-  s3.upload({
-    Bucket: CDN_S3_BUCKET_NAME,
-    Body: file.buffer,
-    Key: fileName,
-    ContentType: file.mimetype,
-    CacheControl: 'max-age=31536000',
-    Tagging: 'UPLOAD=TEMP',
-  })
-    .promise()
+  s3.send(
+    new PutObjectCommand({
+      Bucket: CDN_S3_BUCKET_NAME,
+      Body: file.buffer,
+      Key: fileName,
+      ContentType: file.mimetype,
+      CacheControl: 'max-age=31536000',
+      Tagging: 'UPLOAD=TEMP',
+    }),
+  )
     .then(() => {
       // set the url in the body for further ops
       // and continue...

@@ -1,8 +1,8 @@
 import { MigrationFn } from 'umzug';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 export const up: MigrationFn = async ({ context: DB }: any) => {
-  const orgId = uuidv4();
+  const orgId = randomUUID();
   await DB.organization.create({
     id: orgId,
     name: 'Topcoder.com',
@@ -11,7 +11,7 @@ export const up: MigrationFn = async ({ context: DB }: any) => {
   console.log(' ---\n', 'New organization created in db:', orgId, '\n', '---');
 
   await DB.tags.create({
-    id: uuidv4(),
+    id: randomUUID(),
     organization_id: orgId,
     tag_value: 'TCO',
   });

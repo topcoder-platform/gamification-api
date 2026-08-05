@@ -1,8 +1,7 @@
 import DB from '@/db';
 import { CreateBadgeDto, GetBadgesAssigneesQueryDto, GetBadgesQueryDto, GetMemberBadgesQueryDto } from '@/dtos/badges.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { DEFAULT_PAGE_LIMIT } from '@config';
-import { has } from 'lodash';
 import { getMemberInfoByHandle } from '@services/members.service';
 
 /**
@@ -22,7 +21,7 @@ export async function createBadge(badge: CreateBadgeDto) {
   }
 
   return DB.organization_badges.create({
-    id: uuidv4(),
+    id: randomUUID(),
     ...badge,
   });
 }
@@ -214,7 +213,7 @@ export async function bulkAssignBadges(records: [{ user_handle: string; org_badg
   for (const r of records) {
     const newR: any = r;
     // check if we have the user_id of this handle?
-    if (has(HANDLE_ID_MAP, r.user_handle)) {
+    if (Object.prototype.hasOwnProperty.call(HANDLE_ID_MAP, r.user_handle)) {
       // yes - use it
       newR.user_id = HANDLE_ID_MAP[r.user_handle];
     } else {
@@ -226,7 +225,7 @@ export async function bulkAssignBadges(records: [{ user_handle: string; org_badg
         // all good - use the id
         newR.user_id = userInfo.userId;
         HANDLE_ID_MAP[r.user_handle] = userInfo.userId;
-      } catch (e) {
+      } catch {
         throw new Error(`couldn't find any data for handle: ${r.user_handle}`);
       }
     }

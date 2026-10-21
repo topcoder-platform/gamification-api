@@ -71,7 +71,7 @@ class BadgesController {
       if (!member) throw new Error(`Member ${member_id} does not exists`);
       if (member.status !== 'ACTIVE') throw new Error(`Member ${member_id} is not in ACTIVE status`);
       // all good - try to assing the badge
-      const assign = await assignBadge(badge_id, member_id, req.authUser.nickname || req.authUser.name, member.handle);
+      const assign = await assignBadge(badge_id, member_id, req.authUser.handle, member.handle);
 
       res.json(assign);
     } catch (error) {
@@ -158,7 +158,7 @@ class BadgesController {
                   user_handle: r.tc_handle,
                   org_badge_id: r.badge_id,
                   awarded_at: (Number(new Date(r.awarded_at)) ? new Date(r.awarded_at) : false) || new Date(),
-                  awarded_by: r.awarded_by || req.authUser.nickname || req.authUser.name,
+                  awarded_by: r.awarded_by || req.authUser.handle,
                 };
               }),
             );

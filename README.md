@@ -66,3 +66,23 @@ On PROD & DEV the bucket name is the same - `tc_gamification`.
 We follow strict naming convention: `org_id/badge_image_id.file_ext`. This will ensure badge images are stored in folders per organization and are uniqie named.
 
 This is public access bucket, which provides access to the digital assets used by the gamification project. All files are served with proper HTTP headers. We set `CacheControl: 'max-age=31536000'` (365 days)  header to all badge images which ensures speed loading and reduces traffic.
+
+## Keycloak validation branch
+
+`keycloak_m2M` pins shared core `4.0.0-keycloak.0` at
+`c262f4aca971904f308085bdeaaed35cdf3cfa7d`. Before rollout configure
+`M2M_PROVIDER=keycloak`, `KEYCLOAK_ISSUER`, `KEYCLOAK_AUDIENCE`, and the managed
+HTTPS `KEYCLOAK_TOKEN_URL`. This API does not issue M2M tokens, so no client
+secret is needed. Protected badge operations remain member-administrator only;
+verified service tokens receive 403. Invalid/missing credentials receive 401
+in the existing v3 error envelope. Public badge reads remain public.
+
+Configure member trust with `VALID_ISSUERS` as a JSON array, `AUTH_SECRET` for
+HMAC tokens, and `AUTH_USER_AUDIENCES` as a JSON array or explicit
+`ALLOW_LEGACY_USER_AUDIENCE=true`. Shared core handles exact issuer/audience,
+algorithm, lifetime and normalized claims. Members need a positive user ID and
+verified handle for badge audit attribution; nickname/name fallbacks are removed.
+Member scope claims do not create permissions. Existing role checks remain.
+
+Run `nvm use`, `npm run lint`, `npm run build`, and `npm test`. No application
+is deployed and this branch must remain outside deployment branch filters.

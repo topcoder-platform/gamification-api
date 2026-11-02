@@ -23,7 +23,8 @@
     "sync-orm": "sequelize-auto -o ./src/db/models -d tc_gamification -h localhost -u postgres -p 5432 -x postgres -e postgres -l ts && npm run lint:fix",
     "new-migration": "node src/db/migrate create --name $1",
     "migrate-up": "node src/db/migrate up",
-    "migrate-down": "node src/db/migrate down"
+    "migrate-down": "node src/db/migrate down",
+    "test:dependency-compat": "node --test tools/minimatch-compat/index.test.cjs tools/dependency-compat.test.cjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1102.0",
@@ -33,7 +34,7 @@
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
-    "csv-parse": "^5.6.0",
+    "csv-parse": "^7.0.3",
     "dotenv": "^16.6.1",
     "envalid": "^8.2.0",
     "express": "^4.22.2",
@@ -85,7 +86,9 @@
     "umzug": "^3.1.1"
   },
   "overrides": {
-    "uuid": "11.1.1"
+    "uuid": "11.1.1",
+    "minimatch": "file:tools/minimatch-compat",
+    "glob@>=9": "14.0.3"
   },
   "allowScripts": {
     "@swc/core@1.15.47": true

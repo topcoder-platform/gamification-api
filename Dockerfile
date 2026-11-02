@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_IMAGE=node:24.19.0-alpine3.24@sha256:d32cdf619f63fe0471182d08996dd516c6275bb5fd31ae06e55a570bd9e1ad43
+ARG NODE_IMAGE=node:24.22.2-alpine3.24@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85
 
 FROM ${NODE_IMAGE} AS build-stage
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
+COPY tools ./tools
 RUN npm ci
 
 COPY . .
@@ -25,7 +26,8 @@ FROM ${NODE_IMAGE} AS production-dependencies-stage
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
+COPY tools ./tools
 RUN npm ci --omit=dev --ignore-scripts \
     && npm cache clean --force
 
@@ -36,7 +38,8 @@ WORKDIR /app
 # Package managers are build-time tooling. Removing them from the runtime image
 # eliminates their dependency tree and prevents package installation in a live
 # container.
-RUN rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
+RUN apk upgrade --no-cache \
+    && rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
     && rm -f /usr/local/bin/corepack /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 COPY --from=production-dependencies-stage /app/node_modules ./node_modules

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "environment": "prod",
+  "accountId": "409275337247",
+  "region": "us-east-1",
+  "deployRoleArn": "arn:aws:iam::409275337247:role/gamification-api-prod-deploy",
+  "taskRoleArn": "arn:aws:iam::409275337247:role/tc-gamification-container-role",
+  "executionRoleArn": "arn:aws:iam::409275337247:role/ecsTaskExecutionRole",
+  "cluster": "tc-gamification-serverless",
+  "service": "tc-gamification",
+  "taskFamily": "tc-gamification",
+  "circleciOrgId": "947bef5e-1669-415d-b83c-4fc85155b7df",
+  "circleciProjectId": "9ddd1952-70f8-49fa-b485-e0a500795ff2",
+  "repository": "github.com/topcoder-platform/gamification-api",
+  "branch": "master",
+  "images": {
+    "tc-gamification": "tc-gamification"
+  }
+}

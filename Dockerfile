@@ -6,9 +6,9 @@ FROM ${NODE_IMAGE} AS build-stage
 
 WORKDIR /app
 
-COPY package.json package-lock.json .npmrc ./
+COPY package.json package-lock.json ./
 COPY tools ./tools
-RUN npm ci
+RUN npm ci --install-links=true
 
 COPY . .
 RUN npm run build
@@ -26,9 +26,9 @@ FROM ${NODE_IMAGE} AS production-dependencies-stage
 
 WORKDIR /app
 
-COPY package.json package-lock.json .npmrc ./
+COPY package.json package-lock.json ./
 COPY tools ./tools
-RUN npm ci --omit=dev --ignore-scripts \
+RUN npm ci --install-links=true --omit=dev --ignore-scripts \
     && npm cache clean --force
 
 FROM ${NODE_IMAGE} AS runtime-stage

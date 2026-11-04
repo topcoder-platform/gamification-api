@@ -68,9 +68,9 @@ We follow strict naming convention: `org_id/badge_image_id.file_ext`. This will 
 This is public access bucket, which provides access to the digital assets used by the gamification project. All files are served with proper HTTP headers. We set `CacheControl: 'max-age=31536000'` (365 days)  header to all badge images which ensures speed loading and reduces traffic.
 ### Dependency security checks
 
-Use the Node 24 version in `.nvmrc` and `npm ci` for a reproducible install.
-The committed `.npmrc` packages local compatibility dependencies with
-`install-links=true`; it is also copied into both Docker dependency stages.
+Use the Node 24 version in `.nvmrc` and `npm ci --install-links=true` for a reproducible install.
+The explicit install option packages local compatibility dependencies with
+`install-links=true`; both Docker dependency stages pass the same option.
 The minimatch adapter preserves older tooling APIs while delegating matching
 to the maintained engine.
 

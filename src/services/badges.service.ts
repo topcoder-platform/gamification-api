@@ -205,7 +205,7 @@ const HANDLE_ID_MAP = {};
  * @param records the data
  * @returns Promise
  */
-export async function bulkAssignBadges(records: [{ user_handle: string; org_badge_id: string; awarded_at: Date; awarded_by: string }]) {
+export async function bulkAssignBadges(records: { user_handle: string; org_badge_id: string; awarded_at: Date; awarded_by: string }[]) {
   // process the records,
   // - find user_id from user_handle
   // - find badge_id from badge_name

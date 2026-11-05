@@ -128,3 +128,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Infrastructure definitions and detailed AWS inventories are maintained privately.
+/deploy/iam/
+/deploy/*-baseline.json

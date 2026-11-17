@@ -38,7 +38,7 @@ WORKDIR /app
 # Package managers are build-time tooling. Removing them from the runtime image
 # eliminates their dependency tree and prevents package installation in a live
 # container.
-RUN apk upgrade --no-cache \
+RUN apk upgrade --no-cache && apk add --no-cache "zlib>=1.4-r0" \
     && rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
     && rm -f /usr/local/bin/corepack /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg
 

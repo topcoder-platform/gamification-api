@@ -31,16 +31,12 @@ COPY tools ./tools
 RUN npm ci --install-links=true --omit=dev --ignore-scripts \
     && npm cache clean --force
 
-FROM ${NODE_IMAGE} AS runtime-stage
-
+FROM alpine:3.24 AS runtime-stage
+RUN apk upgrade --no-cache \
+    && apk add --no-cache ca-certificates 'nodejs~24' 'nodejs>=24.22.3-r0' 'libcrypto3>=3.5.9-r1' 'libssl3>=3.5.9-r1' 'zlib>=1.4-r0' \
+    && addgroup -S -g 1000 node \
+    && adduser -S -D -u 1000 -G node node
 WORKDIR /app
-
-# Package managers are build-time tooling. Removing them from the runtime image
-# eliminates their dependency tree and prevents package installation in a live
-# container.
-RUN apk upgrade --no-cache && apk add --no-cache "zlib>=1.4-r0" \
-    && rm -rf /usr/local/lib/node_modules /opt/yarn-v* \
-    && rm -f /usr/local/bin/corepack /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 COPY --from=production-dependencies-stage /app/node_modules ./node_modules
 COPY --from=build-stage /app/dist ./dist

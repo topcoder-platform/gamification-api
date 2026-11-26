@@ -1,6 +1,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "types": ["node", "jest"],
+    "strict": false,
     "target": "es2017",
     "lib": ["es2017", "dom", "dom.iterable", "esnext.asynciterable"],
     "typeRoots": ["node_modules/@types"],
@@ -8,8 +10,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "module": "commonjs",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
     "pretty": true,
     "sourceMap": true,
     "declaration": true,
@@ -19,20 +21,20 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": "src",
+
     "paths": {
-      "@/*": ["*"],
-      "@config": ["config"],
-      "@controllers/*": ["controllers/*"],
-      "@db": ["db"],
-      "@dtos/*": ["dtos/*"],
-      "@exceptions/*": ["exceptions/*"],
-      "@interfaces/*": ["interfaces/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
-      "@routes/*": ["routes/*"],
-      "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"]
+      "@/*": ["./src/*"],
+      "@config": ["./src/config"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@db": ["./src/db"],
+      "@dtos/*": ["./src/dtos/*"],
+      "@exceptions/*": ["./src/exceptions/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@middlewares/*": ["./src/middlewares/*"],
+      "@models/*": ["./src/models/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@services/*": ["./src/services/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"],

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_IMAGE=node:24.22.2-alpine3.24@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85
+ARG NODE_IMAGE=node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5
 
 FROM ${NODE_IMAGE} AS build-stage
 
@@ -33,7 +33,7 @@ RUN npm ci --install-links=true --omit=dev --ignore-scripts \
 
 FROM alpine:3.24 AS runtime-stage
 RUN apk upgrade --no-cache \
-    && apk add --no-cache ca-certificates 'nodejs~24' 'nodejs>=24.22.3-r0' 'libcrypto3>=3.5.9-r1' 'libssl3>=3.5.9-r1' 'zlib>=1.4-r0' \
+    && apk add --no-cache ca-certificates 'nodejs-current~26.13.1' 'libcrypto3>=3.5.9-r1' 'libssl3>=3.5.9-r1' 'zlib>=1.4-r0' \
     && addgroup -S -g 1000 node \
     && adduser -S -D -u 1000 -G node node
 WORKDIR /app
